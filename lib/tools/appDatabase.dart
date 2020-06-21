@@ -15,7 +15,7 @@ class AppDatabase {
   static Database _database;
 
   ///The tables of the database.
-  /// {
+  ///``` {
   ///   'table1' : {
   ///   'column1' : 'Sqelite built-in types',
   ///   'column2' : 'Sqelite built-in types'...
@@ -26,23 +26,27 @@ class AppDatabase {
   ///   'column2' : 'Sqelite built-in types',
   ///   'column3' : 'Sqelite built-in types'
   ///   },
-  ///
   ///   ...
   /// }
+  /// ```
   static const Map<String, Map<String, String>> _tables = {
     'notes': {
       'id': Types.INTEGER + " PRIMARY KEY",
+      'priority': Types.INTEGER,
       'title': Types.TEXT,
       'description': Types.TEXT,
-      'date': Types.TEXT
+      'date': Types.TEXT,
+      'reminder': Types.TEXT
     },
     'goals': {
       'id': Types.INTEGER + " PRIMARY KEY",
+      'priority': Types.INTEGER,
       'title': Types.TEXT,
       'description': Types.TEXT,
       'tasks': Types.TEXT,
-      'start_date': Types.TEXT,
-      'end_date': Types.TEXT,
+      'startDate': Types.TEXT,
+      'endDate': Types.TEXT,
+      'reminder': Types.TEXT
     }
   };
 
@@ -94,6 +98,7 @@ class AppDatabase {
       await _database.delete(table, where: where);
   }
 
+  //TEMP:REMOVE THIS METHOD AFTER TESTING
   static Future<void> diplayTable(String table) async {
     if (_database != null && _database.isOpen && _tables.containsKey(table)) {
       (await _database.rawQuery('SELECT * FROM $table')).forEach((element) {

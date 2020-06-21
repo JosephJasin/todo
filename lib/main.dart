@@ -6,16 +6,17 @@ void main() async {
     home: MyApp(),
   ));
 
-  await AppDatabase.open();
-  // await AppDatabase.insertRow('notes', {
-  //   'id' : null,
-  //   'title' : 'title1',
-  //   'description': 'descritption1',
-  // });
-
-  await AppDatabase.updateRow('notes', {'title': 'NEWTITLE3'});
+  await AppDatabase.open(version: 1);
+  await AppDatabase.insertRow('notes', {
+    'id' : null,
+    'title' : 'title1',
+    'description': 'descritption1',
+    'reminder' : '2020'
+  });
 
   await AppDatabase.diplayTable('notes');
+
+  print("TEST");
 }
 
 class MyApp extends StatefulWidget {
