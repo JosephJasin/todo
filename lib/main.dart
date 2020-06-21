@@ -6,6 +6,8 @@ void main() async {
     home: MyApp(),
   ));
 
+  await AppDatabase.deleteAppDatabase();
+
   await AppDatabase.open(version: 1);
   await AppDatabase.insertRow('notes', {
     'id' : null,

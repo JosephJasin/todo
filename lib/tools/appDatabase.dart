@@ -1,4 +1,5 @@
 import 'dart:io' show File;
+import 'package:path/path.dart' show join;
 import 'package:sqflite/sqflite.dart';
 
 ///Sqelite built-in types.
@@ -14,6 +15,7 @@ class AppDatabase {
   static String _name = 'AppDatabase.db';
   static Database _database;
 
+  ///WARNING: any change in the tables must be applied to Note & Goal classes.
   ///The tables of the database.
   ///``` {
   ///   'table1' : {
@@ -72,8 +74,8 @@ class AppDatabase {
 
   ///Delete the database.
   static Future<void> deleteAppDatabase() async {
-    if (_database != null && File(_database.path).existsSync())
-      deleteDatabase(_database.path);
+    String path = join(await getDatabasesPath(), _name);
+    if (await File(path).exists()) await File(path).delete();
   }
 
   ///Add one row to any table.
