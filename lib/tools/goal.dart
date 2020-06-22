@@ -1,6 +1,6 @@
 class Goal {
   int id, priority;
-  String title, description, tasks, startDate, endDate, reminder;
+  String title, description, tasks, startDate, endDate, reminder, hexcolor;
 
   Goal(
       {this.priority = 1,
@@ -9,7 +9,8 @@ class Goal {
       this.tasks = '',
       this.startDate = '',
       this.endDate = '',
-      this.reminder = ''});
+      this.reminder = '',
+      this.hexcolor = 'ffffff'});
 
   Goal.fromRow(Map<String, dynamic> row) {
     id = row['id'];
@@ -20,6 +21,7 @@ class Goal {
     startDate = row['startDate'];
     endDate = row['endDate'];
     reminder = row['reminder'];
+    hexcolor = row['color'];
   }
 
   Map<String, dynamic> toRow() {
@@ -31,7 +33,8 @@ class Goal {
       'tasks': tasks,
       'startDate': startDate,
       'endDate': endDate,
-      'reminder': reminder
+      'reminder': reminder,
+      'color': hexcolor
     };
   }
 }

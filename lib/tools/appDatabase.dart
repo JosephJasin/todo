@@ -38,7 +38,8 @@ class AppDatabase {
       'title': Types.TEXT,
       'description': Types.TEXT,
       'date': Types.TEXT,
-      'reminder': Types.TEXT
+      'reminder': Types.TEXT,
+      'hexcolor': Types.TEXT
     },
     'goals': {
       'id': Types.INTEGER + " PRIMARY KEY",
@@ -48,7 +49,8 @@ class AppDatabase {
       'tasks': Types.TEXT,
       'startDate': Types.TEXT,
       'endDate': Types.TEXT,
-      'reminder': Types.TEXT
+      'reminder': Types.TEXT,
+      'hexcolor': Types.TEXT
     }
   };
 
