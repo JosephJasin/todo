@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-import 'editPage.dart';
+
+import 'editNotePage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,40 +15,42 @@ class _HomePageState extends State<HomePage> {
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50),
+          preferredSize: Size.fromHeight(70),
           child: AppBar(
-            bottom: TabBar(tabs: [
-              Tab(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text("Notes"),
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text("Notes"),
+                  ),
                 ),
-              ),
-              Tab(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text("Goals"),
+                Tab(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text("Goals"),
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
         ),
         body: TabBarView(
           children: [
-            Icon(Icons.apps),
+            Icon(Icons.movie),
             Icon(Icons.movie),
           ],
         ),
         floatingActionButton: OpenContainer(
           closedShape: const CircleBorder(),
-          closedColor: Colors.red,
+          //closedColor: Colors.red,
           closedBuilder: (context, action) => const FloatingActionButton(
             onPressed: null,
             child: Icon(Icons.add),
           ),
-          openBuilder: (context, action) => EditPage(),
+          openBuilder: (context, action) => EditNotePage(),
           transitionType: ContainerTransitionType.fade,
-          transitionDuration: const Duration(milliseconds: 350),
+          transitionDuration: const Duration(milliseconds: 500),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       ),

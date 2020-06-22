@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'routs/homePage.dart';
+import 'routes/editNotePage.dart';
+import 'routes/homePage.dart';
+
 import 'themes.dart';
-void main() async => runApp(App());
+
+void main() {
+  runApp(App());
+
+  //AppDatabase.deleteAppDatabase();
+
+  // AppDatabase.open();
+}
 
 class App extends StatefulWidget {
   @override
@@ -14,7 +23,11 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
+    SystemChrome.setEnabledSystemUIOverlays(
+        <SystemUiOverlay>[SystemUiOverlay.top]);
+
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   }
 
   @override
@@ -22,8 +35,8 @@ class _AppState extends State<App> {
     return MaterialApp(
       theme: Themes.redTheme,
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
-      // home: EditPage(),
+      // home: HomePage(),
+      home: EditNotePage(),
     );
   }
 }
