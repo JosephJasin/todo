@@ -1,3 +1,4 @@
+import 'package:NotesAndGoals/tools/appDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,9 +10,11 @@ import 'themes.dart';
 void main() {
   runApp(App());
 
-  //AppDatabase.deleteAppDatabase();
+  // AppDatabase.deleteAppDatabase();
 
-  // AppDatabase.open();
+  //AppDatabase.open();
+
+  AppDatabase.diplayTable('notes');
 }
 
 class App extends StatefulWidget {
@@ -24,10 +27,18 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays(
-        <SystemUiOverlay>[SystemUiOverlay.top]);
+      <SystemUiOverlay>[
+        SystemUiOverlay.top,
+        SystemUiOverlay.bottom,
+      ],
+    );
 
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -35,8 +46,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       theme: Themes.redTheme,
       debugShowCheckedModeBanner: false,
-      // home: HomePage(),
-      home: EditNotePage(),
+      home: HomePage(),
     );
   }
 }

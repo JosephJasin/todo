@@ -9,11 +9,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _scaffold = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        key: _scaffold,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70),
           child: AppBar(
@@ -44,15 +47,18 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: OpenContainer(
           closedShape: const CircleBorder(),
           //closedColor: Colors.red,
-          closedBuilder: (context, action) => const FloatingActionButton(
-            onPressed: null,
-            child: Icon(Icons.add),
-          ),
-          openBuilder: (context, action) => EditNotePage(),
+
+          closedBuilder: (context, action) {
+            return const FloatingActionButton(
+              onPressed: null,
+              child: Icon(Icons.add),
+            );
+          },
+          openBuilder: (context, action) => EditNotePage(scaffold: _scaffold,),
           transitionType: ContainerTransitionType.fade,
           transitionDuration: const Duration(milliseconds: 500),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }

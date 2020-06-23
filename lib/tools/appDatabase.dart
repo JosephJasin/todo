@@ -39,7 +39,6 @@ class AppDatabase {
       'description': Types.TEXT,
       'date': Types.TEXT,
       'reminder': Types.TEXT,
-      'hexcolor': Types.TEXT
     },
     'goals': {
       'id': Types.INTEGER + " PRIMARY KEY",
@@ -50,7 +49,6 @@ class AppDatabase {
       'startDate': Types.TEXT,
       'endDate': Types.TEXT,
       'reminder': Types.TEXT,
-      'hexcolor': Types.TEXT
     }
   };
 
@@ -83,28 +81,33 @@ class AppDatabase {
   ///Add one row to any table.
   static Future<void> insertRow(
       String table, Map<String, dynamic> values) async {
-    if (_database != null && _database.isOpen && _tables.containsKey(table))
-      await _database.insert(table, values);
+    await open();
+
+    if (_tables.containsKey(table)) await _database.insert(table, values);
   }
 
   ///Edit a row in any table.
   ///if [where] is null , all the rows in the values will be updated.
   static Future<void> updateRow(String table, Map<String, dynamic> values,
       {String where}) async {
-    if (_database != null && _database.isOpen && _tables.containsKey(table))
+    await open();
+    if (_tables.containsKey(table))
       await _database.update(table, values, where: where);
   }
 
   ///Delete a row in a table.
   ///if [where] is null , all the rows will be deleted.
   static Future<void> deleteRow(String table, String where) async {
-    if (_database != null && _database.isOpen && _tables.containsKey(table))
-      await _database.delete(table, where: where);
+    await open();
+
+    if (_tables.containsKey(table)) await _database.delete(table, where: where);
   }
 
   //TEMP:REMOVE THIS METHOD AFTER TESTING
   static Future<void> diplayTable(String table) async {
-    if (_database != null && _database.isOpen && _tables.containsKey(table)) {
+    await open();
+
+    if (_tables.containsKey(table)) {
       (await _database.rawQuery('SELECT * FROM $table')).forEach((element) {
         element.forEach((key, value) {
           print('$value,');

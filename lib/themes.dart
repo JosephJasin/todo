@@ -5,6 +5,10 @@ abstract class Themes {
     primaryColor: Colors.red,
     accentColor: Colors.red,
     cursorColor: Colors.red,
+    backgroundColor: Colors.white,
+    textTheme: TextTheme(
+      bodyText2: const TextStyle(fontWeight: FontWeight.bold),
+    ),
     iconTheme: const IconThemeData(color: Colors.white, size: 25),
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(elevation: 0),
@@ -24,6 +28,7 @@ abstract class Themes {
       splashColor: Colors.white,
     ),
     inputDecorationTheme: InputDecorationTheme(
+      labelStyle: TextStyle(fontWeight: FontWeight.bold),
       enabledBorder: const OutlineInputBorder(
         borderSide: const BorderSide(color: Colors.grey),
       ),
@@ -32,15 +37,18 @@ abstract class Themes {
       ),
     ),
     sliderTheme: SliderThemeData(
+      showValueIndicator: ShowValueIndicator.onlyForDiscrete,
+      valueIndicatorColor: Colors.red[700],
       activeTrackColor: Colors.red[700],
       inactiveTrackColor: Colors.red[100],
-      trackShape: RectangularSliderTrackShape(),
+      trackShape: const RectangularSliderTrackShape(),
       trackHeight: 4.0,
       thumbColor: Colors.redAccent,
-      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
       overlayColor: Colors.red.withAlpha(32),
-      overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+      overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
+      activeTickMarkColor: Colors.red[900],
+      inactiveTickMarkColor: Colors.red[900],
     ),
   );
 }
-
