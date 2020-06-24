@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:NotesAndGoals/tools/appDatabase.dart';
 import 'package:NotesAndGoals/tools/note.dart';
+import 'package:NotesAndGoals/widgets/dateAndTimePicker.dart';
 
 ///[EditNotePage] will be displayed when:
 ///The [FloatingActionButton] button in [HomePage] is clicked (Add a new Note to the [AppDatabase]).
@@ -12,11 +13,10 @@ class EditNotePage extends StatelessWidget {
   ///otherwise = 'Edit Note'.
   final String appBarTitle;
 
-  final Note _note = Note();
+  final Note _note;
 
-  final TextEditingController titleController,
-      descriptionController,
-      reminderController;
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   ///[scaffold] key is used to display a [SnackBar] in [HomePage]
   ///when the note is saved only.
@@ -24,16 +24,16 @@ class EditNotePage extends StatelessWidget {
 
   EditNotePage({Key key, Note note, this.scaffold})
       : appBarTitle = note == null ? 'Add Note' : 'Edit Note',
-        titleController = TextEditingController(text: note?.title),
-        descriptionController = TextEditingController(text: note?.description),
-        reminderController = TextEditingController(text: note?.reminder),
-        super(key: key);
+        _note = note ?? Note(),
+        super(key: key) {
+    titleController.text = _note.title;
+    descriptionController.text = _note.description;
+  }
 
   Future<void> saveNote(BuildContext context) async {
     _note
       ..title = titleController.text
-      ..description = descriptionController.text
-      ..reminder = reminderController.text;
+      ..description = descriptionController.text;
 
     if (appBarTitle == 'Add Note')
       await AppDatabase.insertRow('notes', _note.toRow());
@@ -77,41 +77,7 @@ class EditNotePage extends StatelessWidget {
             maxLines: null,
           ),
           const SizedBox(height: 10),
-          TextField(
-            controller: reminderController,
-            decoration: InputDecoration(
-              labelText: 'Remind me at',
-              suffixIcon: IconButton(
-                icon: Icon(Icons.date_range),
-                onPressed: () async {
-                  DateTime lastDate =
-                      DateTime.tryParse(reminderController.text);
-
-                  DateTime date = await showDatePicker(
-                    context: context,
-                    initialDate: lastDate == null ? DateTime.now() : lastDate,
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(2100),
-                  );
-
-                  TimeOfDay time = await showTimePicker(
-                      context: context,
-                      initialTime: lastDate == null
-                          ? TimeOfDay.now()
-                          : TimeOfDay.fromDateTime(lastDate));
-
-                  try {
-                    date = date.add(
-                        Duration(hours: time?.hour, minutes: time?.minute));
-                  } catch (_) {}
-
-                  if (date != null)
-                    reminderController.text =
-                        '${date.year}-${date.month < 10 ? 0 : ''}${date.month}-${date.day < 10 ? 0 : ''}${date.day} ${date.hour}:${date.minute}';
-                },
-              ),
-            ),
-          ),
+          DateAndTimePicker(_note),
           const SizedBox(height: 10),
 
           //[_note] is passed to [CustomSlider] to provide the value of [_note.priority].
@@ -128,7 +94,6 @@ class EditNotePage extends StatelessWidget {
                   onPressed: () {
                     titleController.text = '';
                     descriptionController.text = '';
-                    reminderController.text = '';
                   },
                 ),
               ),

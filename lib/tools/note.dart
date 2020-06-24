@@ -29,4 +29,13 @@ class Note {
       'reminder': reminder
     };
   }
+
+  void copyValuesFrom(Note note) {
+    id = note.id;
+    priority = note.priority;
+    title = note.title;
+    description = note.description;
+    date = note.date;
+    reminder = note.reminder;
+  }
 }
