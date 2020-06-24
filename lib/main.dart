@@ -7,12 +7,11 @@ import 'routes/homePage.dart';
 
 import 'themes.dart';
 
-void main()async {
+void main() async {
   runApp(App());
+  //await AppDatabase.open();
 
   //await AppDatabase.deleteAppDatabase();
-
-  //AppDatabase.open();
 
   await AppDatabase.diplayTable('notes');
 }

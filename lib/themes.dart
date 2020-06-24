@@ -50,5 +50,7 @@ abstract class Themes {
       activeTickMarkColor: Colors.red[900],
       inactiveTickMarkColor: Colors.red[900],
     ),
+
+    indicatorColor: Colors.red,
   );
 }

@@ -1,3 +1,4 @@
+import 'package:NotesAndGoals/routes/NotePage.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage> {
         ),
         body: TabBarView(
           children: [
-            Icon(Icons.movie),
+            NotePage(),
             Icon(Icons.movie),
           ],
         ),
@@ -54,7 +55,9 @@ class _HomePageState extends State<HomePage> {
               child: Icon(Icons.add),
             );
           },
-          openBuilder: (context, action) => EditNotePage(scaffold: _scaffold,),
+          openBuilder: (context, action) => EditNotePage(
+            scaffold: _scaffold,
+          ),
           transitionType: ContainerTransitionType.fade,
           transitionDuration: const Duration(milliseconds: 500),
         ),

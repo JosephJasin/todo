@@ -1,6 +1,7 @@
 import 'dart:io' show File;
 import 'package:path/path.dart' show join;
 import 'package:sqflite/sqflite.dart';
+import 'package:NotesAndGoals/tools/note.dart';
 
 ///Sqelite built-in types.
 abstract class Types {
@@ -76,6 +77,9 @@ class AppDatabase {
   static Future<void> deleteAppDatabase() async {
     String path = join(await getDatabasesPath(), _name);
     if (await File(path).exists()) await File(path).delete();
+
+    // await open();
+    // await deleteDatabase(_database.path);
   }
 
   ///Add one row to any table.
@@ -108,7 +112,7 @@ class AppDatabase {
     await open();
 
     if (_tables.containsKey(table)) {
-      (await _database.rawQuery('SELECT * FROM $table')).forEach((element) {
+      (await _database.query(table)).forEach((element) {
         element.forEach((key, value) {
           print('$value,');
         });
@@ -116,5 +120,14 @@ class AppDatabase {
         print('');
       });
     }
+  }
+
+  static Future<List<Map<String, dynamic>>> getTableRows(String table,
+      {String orderBy}) async {
+    await open();
+
+    return _tables.containsKey(table)
+        ? await _database.query(table, orderBy: orderBy)
+        : null;
   }
 }
