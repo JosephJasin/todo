@@ -1,21 +1,21 @@
 class Note {
-  int id, priority;
-  String title, description, date, reminder;
+  int id, priority, done;
+  String title, description, reminder;
 
   Note({
     this.priority = 1,
+    this.done = 0,
     this.title = '',
     this.description = '',
-    this.date = '',
     this.reminder = '',
   });
 
   Note.fromRow(Map<String, dynamic> row) {
     id = row['id'];
     priority = row['priority'];
+    done = row['done'];
     title = row['title'];
     description = row['description'];
-    date = row['date'];
     reminder = row['reminder'];
   }
 
@@ -23,9 +23,9 @@ class Note {
     return {
       'id': id,
       'priority': priority,
+      'done': done,
       'title': title,
       'description': description,
-      'date': date,
       'reminder': reminder
     };
   }
@@ -33,9 +33,9 @@ class Note {
   void copyValuesFrom(Note note) {
     id = note.id;
     priority = note.priority;
+    done = note.done;
     title = note.title;
     description = note.description;
-    date = note.date;
     reminder = note.reminder;
   }
 }

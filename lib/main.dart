@@ -7,14 +7,14 @@ import 'routes/homePage.dart';
 
 import 'themes.dart';
 
-void main() {
+void main()async {
   runApp(App());
 
-  // AppDatabase.deleteAppDatabase();
+  //await AppDatabase.deleteAppDatabase();
 
   //AppDatabase.open();
 
-  AppDatabase.diplayTable('notes');
+  await AppDatabase.diplayTable('notes');
 }
 
 class App extends StatefulWidget {

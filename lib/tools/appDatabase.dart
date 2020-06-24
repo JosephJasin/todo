@@ -35,9 +35,9 @@ class AppDatabase {
     'notes': {
       'id': Types.INTEGER + " PRIMARY KEY",
       'priority': Types.INTEGER,
+      'done': Types.INTEGER,
       'title': Types.TEXT,
       'description': Types.TEXT,
-      'date': Types.TEXT,
       'reminder': Types.TEXT,
     },
     'goals': {

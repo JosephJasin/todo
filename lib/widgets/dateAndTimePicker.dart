@@ -6,9 +6,14 @@ import 'package:NotesAndGoals/tools/note.dart';
 ///Pick a Date & Time for [note.reminder].
 class DateAndTimePicker extends StatefulWidget {
   final Note note;
+  final TextEditingController controller;
 
-  const DateAndTimePicker(this.note, {Key key})
-      : assert(note != null),
+  DateAndTimePicker(
+    this.note, {
+    Key key,
+    TextEditingController controller,
+  })  : assert(note != null),
+        this.controller = controller ?? TextEditingController(),
         super(key: key);
 
   @override
@@ -16,8 +21,6 @@ class DateAndTimePicker extends StatefulWidget {
 }
 
 class _DateAndTimePickerState extends State<DateAndTimePicker> {
-  final controller = TextEditingController();
-
   DateTime selectedDate;
 
   @override
@@ -57,7 +60,7 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
       tempTime.minute,
     );
 
-    controller.text = DateFormat('y/MMM/d').format(selectedDate) +
+    widget.controller.text = DateFormat('y/MMM/d').format(selectedDate) +
         ' , ' +
         DateFormat.jm().format(selectedDate);
 
@@ -67,7 +70,7 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
   Widget build(BuildContext context) {
     return TextField(
       readOnly: true,
-      controller: controller,
+      controller: widget.controller,
       onTap: showDateThanTime,
       decoration: InputDecoration(
         labelText: 'Remind me at',
