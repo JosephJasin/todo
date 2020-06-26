@@ -66,12 +66,41 @@ class NoteWidget extends StatelessWidget {
         child: ListTile(
           title: Text(note.title),
           subtitle: Text(note.getFormatedDate),
-          trailing: Checkbox(
+          leading: Checkbox(
             value: note.done.toBool(),
             onChanged: (value) {
               note.done = value.toInt();
               if (value) note.priority = 1;
               context.read<Notes>().update(note);
+            },
+          ),
+          trailing: IconButton(
+            icon: Icon(
+              Icons.delete,
+              color: Theme.of(context).primaryColor,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  content: Text('Do you want to delete this note'),
+                  actions: <Widget>[
+                    FlatButton(
+                      textColor: Theme.of(context).primaryColor,
+                      child: Text('No'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    FlatButton(
+                      textColor: Theme.of(context).primaryColor,
+                      child: Text('Yes'),
+                      onPressed: () async {
+                        await context.read<Notes>().remove(note);
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+              );
             },
           ),
         ),

@@ -35,6 +35,8 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
       lastDate: DateTime(2030),
     );
 
+    if (tempDate == null) return;
+
     //If the user click the cancel button , the value of [tempTime] will be [null].
     TimeOfDay tempTime = await showTimePicker(
       context: context,
@@ -44,15 +46,12 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
       ),
     );
 
-    tempTime ??=
-        TimeOfDay(hour: selectedDate.hour, minute: selectedDate.minute);
-
-    if (tempDate != null) selectedDate = tempDate;
+    if (tempTime == null) return;
 
     selectedDate = DateTime(
-      selectedDate.year,
-      selectedDate.month,
-      selectedDate.day,
+      tempDate.year,
+      tempDate.month,
+      tempDate.day,
       tempTime.hour,
       tempTime.minute,
     );

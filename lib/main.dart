@@ -1,3 +1,4 @@
+import 'package:NotesAndGoals/routes/editNotePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -54,6 +55,9 @@ class _AppState extends State<App> {
       child: MaterialApp(
         theme: Themes.redTheme,
         debugShowCheckedModeBanner: false,
+        routes: {
+          'home':(context)=>HomePage(),
+        },
         home: HomePage(),
       ),
     );
