@@ -52,7 +52,7 @@ class Note {
 //CHANGE ME IF(a new proprity is added to the [Note])
   Map<String, dynamic> toRow() {
     return {
-       'id': id,
+      'id': id,
       'priority': priority,
       'done': done,
       'title': title,
@@ -96,7 +96,8 @@ class Notes extends ChangeNotifier {
   }
 
   Future<void> update(Note note) async {
-    await AppDatabase.updateRow('notes', note.toRow() ,where: 'id = ${note.id}');
+    await AppDatabase.updateRow('notes', note.toRow(),
+        where: 'id = ${note.id}');
     await _load();
     notifyListeners();
   }
@@ -106,4 +107,6 @@ class Notes extends ChangeNotifier {
     await _load();
     notifyListeners();
   }
+
+
 }

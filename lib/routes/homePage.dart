@@ -1,8 +1,9 @@
-import 'package:NotesAndGoals/routes/NotePage.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
 import 'editNotePage.dart';
+import './notePage.dart';
+import './settingsPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,24 +16,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      initialIndex: 0,
+      length: 3,
       child: Scaffold(
         key: _scaffold,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70),
           child: AppBar(
-            bottom: TabBar(
+            bottom: const TabBar(
               tabs: [
-                Tab(
+                const Tab(
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text("Notes"),
+                    child: const Text("Notes"),
                   ),
                 ),
-                Tab(
+                const Tab(
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text("Goals"),
+                    child: const Text("Goals"),
+                  ),
+                ),
+                const Tab(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: const Text("Settings"),
                   ),
                 ),
               ],
@@ -45,6 +53,7 @@ class _HomePageState extends State<HomePage> {
               scaffoldKey: _scaffold,
             ),
             Icon(Icons.movie),
+            SettingsPage(),
           ],
         ),
         floatingActionButton: OpenContainer(

@@ -1,4 +1,3 @@
-import 'package:NotesAndGoals/routes/editNotePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,13 +6,28 @@ import 'package:provider/provider.dart';
 import 'appDatabase.dart';
 import 'models/notes.dart';
 import 'models/goals.dart';
+import 'models/settings.dart';
 
 import 'routes/homePage.dart';
+import 'routes/editNotePage.dart';
 
 import 'themes.dart';
 
 void main() async {
-  runApp(App());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Settings>(create: (context) => Settings()),
+        ChangeNotifierProvider<Notes>(create: (context) => Notes()),
+        ChangeNotifierProvider<Goals>(create: (context) => Goals()),
+      ],
+      child: Consumer<Settings>(
+        builder: (context, Settings builder, child) {
+          return App(color: builder.color);
+        },
+      ),
+    ),
+  );
   //await AppDatabase.open();
 
   //await AppDatabase.deleteAppDatabase();
@@ -21,45 +35,29 @@ void main() async {
   //await AppDatabase.diplayTable('notes');
 }
 
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
-}
+class App extends StatelessWidget {
+  final Color color;
+  const App({this.color = Colors.red});
 
-class _AppState extends State<App> {
   @override
-  void initState() {
-    super.initState();
-    SystemChrome.setEnabledSystemUIOverlays(
-      <SystemUiOverlay>[
-        SystemUiOverlay.top,
-        SystemUiOverlay.bottom,
-      ],
-    );
+  Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([
+      SystemUiOverlay.top,
+    ]);
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.red,
+        systemNavigationBarColor: color,
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<Notes>(create: (context) => Notes()),
-        ChangeNotifierProvider<Goals>(create: (context) => Goals()),
-      ],
-      child: MaterialApp(
-        theme: Themes.redTheme,
-        debugShowCheckedModeBanner: false,
-        routes: {
-          'home':(context)=>HomePage(),
-        },
-        home: HomePage(),
-      ),
+    return MaterialApp(
+      theme: Themes(themeColor: color).themeData,
+      debugShowCheckedModeBanner: false,
+      // routes: {
+      //   'home':(context)=>HomePage(),
+      // },
+      home: HomePage(),
     );
   }
 }

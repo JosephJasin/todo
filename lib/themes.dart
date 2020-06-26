@@ -1,59 +1,65 @@
 import 'package:flutter/material.dart';
 
-abstract class Themes {
-  static final ThemeData redTheme = ThemeData(
-    primaryColor: Colors.red,
-    accentColor: Colors.red,
-    cursorColor: Colors.red,
-    backgroundColor: Colors.white,
-    textTheme: TextTheme(
-      bodyText2: const TextStyle(fontWeight: FontWeight.bold),
-    ),
-    iconTheme: const IconThemeData(color: Colors.white, size: 25),
-    scaffoldBackgroundColor: Colors.white,
-    appBarTheme: AppBarTheme(elevation: 0),
-    tabBarTheme: TabBarTheme(
-      indicatorSize: TabBarIndicatorSize.label,
-      labelColor: Colors.red,
-      unselectedLabelColor: Colors.white,
-      indicator: const BoxDecoration(
-          borderRadius: const BorderRadius.only(
-              topLeft: const Radius.circular(10),
-              topRight: const Radius.circular(10)),
-          color: Colors.white),
-    ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.white,
-      splashColor: Colors.white,
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      labelStyle: TextStyle(fontWeight: FontWeight.bold),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.grey),
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.red),
-      ),
-    ),
-    sliderTheme: SliderThemeData(
-      showValueIndicator: ShowValueIndicator.onlyForDiscrete,
-      valueIndicatorColor: Colors.red[700],
-      activeTrackColor: Colors.red[700],
-      inactiveTrackColor: Colors.red[100],
-      trackShape: const RectangularSliderTrackShape(),
-      trackHeight: 4.0,
-      thumbColor: Colors.redAccent,
-      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
-      overlayColor: Colors.red.withAlpha(32),
-      overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
-      activeTickMarkColor: Colors.red[900],
-      inactiveTickMarkColor: Colors.red[900],
-    ),
+class Themes {
+  final Color themeColor;
+  final ThemeData themeData;
 
-    indicatorColor: Colors.red,
-
-    
-
-  );
+  Themes({this.themeColor = Colors.red})
+      : themeData = ThemeData(
+          primaryColor: themeColor,
+          accentColor: themeColor,
+          cursorColor: themeColor,
+          backgroundColor: Colors.white,
+          textTheme: TextTheme(
+            bodyText2: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          iconTheme: const IconThemeData(color: Colors.white, size: 25),
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(elevation: 0),
+          tabBarTheme: TabBarTheme(
+            indicatorSize: TabBarIndicatorSize.label,
+            labelColor: themeColor,
+            unselectedLabelColor: Colors.white,
+            indicator: const BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    topLeft: const Radius.circular(10),
+                    topRight: const Radius.circular(10)),
+                color: Colors.white),
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: themeColor,
+            foregroundColor: themeColor,
+            splashColor: Colors.white,
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            labelStyle: TextStyle(fontWeight: FontWeight.bold),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: themeColor),
+            ),
+          ),
+          sliderTheme: SliderThemeData(
+            showValueIndicator: ShowValueIndicator.onlyForDiscrete,
+            valueIndicatorColor:
+                HSVColor.fromColor(themeColor).withValue(0.7).toColor(),
+            activeTrackColor:
+                HSVColor.fromColor(themeColor).withValue(0.7).toColor(),
+            inactiveTrackColor:
+                HSVColor.fromColor(themeColor).withSaturation(0.6).toColor(),
+            trackShape: const RectangularSliderTrackShape(),
+            trackHeight: 4.0,
+            thumbColor:
+                HSVColor.fromColor(themeColor).withSaturation(0.6).toColor(),
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
+            overlayColor: themeColor.withAlpha(32),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
+            activeTickMarkColor:
+                HSVColor.fromColor(themeColor).withValue(0.6).toColor(),
+            inactiveTickMarkColor:
+                HSVColor.fromColor(themeColor).withValue(0.6).toColor(),
+          ),
+          indicatorColor: Colors.red,
+        );
 }
