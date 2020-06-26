@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'package:NotesAndGoals/tools/note.dart';
+part of widgets;
 
 class CustomSlider extends StatefulWidget {
   final Note note;

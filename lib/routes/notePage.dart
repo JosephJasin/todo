@@ -1,42 +1,54 @@
-import 'package:NotesAndGoals/tools/appDatabase.dart';
-import 'package:NotesAndGoals/tools/note.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class NotePage extends StatefulWidget {
-  @override
-  _NotePageState createState() => _NotePageState();
-}
+import '../models/notes.dart';
+import '../routes/editNotePage.dart';
 
-class _NotePageState extends State<NotePage> {
+class NotePage extends StatelessWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  NotePage({Key key, this.scaffoldKey}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: AppDatabase.getTableRows('notes', orderBy: 'priority DESC'),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              Note note = Note.fromRow(snapshot.data[index]);
-              return NoteWidget(note);
-            },
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    return Consumer<Notes>(
+      builder: (context, Notes builder, child) {
+        return ListView.builder(
+          itemCount: builder.notesLength,
+          itemBuilder: (context, index) {
+            return OpenContainer(
+              closedElevation: 0,
+              openElevation: 0,
+              closedBuilder: (context, action) => NoteWidget(
+                builder.notes[index],
+              ),
+              openBuilder: (context, action) => EditNotePage(
+                row: builder.notes[index],
+                scaffold: scaffoldKey,
+              ),
+            );
+          },
+        );
       },
     );
   }
 }
 
+extension on int {
+  bool toBool() => this == 1;
+}
+
+extension on bool {
+  int toInt() => this ? 1 : 0;
+}
+
 class NoteWidget extends StatelessWidget {
   final Note note;
 
-  const NoteWidget(this.note, {Key key})
-      : assert(note != null),
+  NoteWidget(Map<String, dynamic> row, {Key key})
+      : note = Note.fromRow(row),
+        assert(row != null),
         super(key: key);
 
   @override
@@ -53,34 +65,17 @@ class NoteWidget extends StatelessWidget {
         ),
         child: ListTile(
           title: Text(note.title),
-          subtitle: Text(
-              '${DateFormat('y/MMM/d').format(DateTime.parse(note.reminder))} , ${DateFormat.jm().format(DateTime.parse(note.reminder))}'),
-          trailing: NoteWidgetCheckbox(note),
+          subtitle: Text(note.getFormatedDate),
+          trailing: Checkbox(
+            value: note.done.toBool(),
+            onChanged: (value) {
+              note.done = value.toInt();
+              if (value) note.priority = 1;
+              context.read<Notes>().update(note);
+            },
+          ),
         ),
       ),
-    );
-    ;
-  }
-}
-
-class NoteWidgetCheckbox extends StatefulWidget {
-  final Note note;
-  NoteWidgetCheckbox(this.note, {Key key})
-      : assert(note != null),
-        super(key: key);
-
-  @override
-  NoteWidgetCheckboxState createState() => NoteWidgetCheckboxState();
-}
-
-class NoteWidgetCheckboxState extends State<NoteWidgetCheckbox> {
-  bool value = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Checkbox(
-      value: value,
-      onChanged: (newValue) => setState(() => value = newValue),
     );
   }
 }

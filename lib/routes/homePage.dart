@@ -41,14 +41,14 @@ class _HomePageState extends State<HomePage> {
         ),
         body: TabBarView(
           children: [
-            NotePage(),
+            NotePage(
+              scaffoldKey: _scaffold,
+            ),
             Icon(Icons.movie),
           ],
         ),
         floatingActionButton: OpenContainer(
           closedShape: const CircleBorder(),
-          //closedColor: Colors.red,
-
           closedBuilder: (context, action) {
             return const FloatingActionButton(
               onPressed: null,

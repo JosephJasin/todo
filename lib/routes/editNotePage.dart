@@ -1,9 +1,9 @@
-import 'package:NotesAndGoals/widgets/customSlider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'package:NotesAndGoals/tools/appDatabase.dart';
-import 'package:NotesAndGoals/tools/note.dart';
-import 'package:NotesAndGoals/widgets/dateAndTimePicker.dart';
+import '../appDatabase.dart';
+import '../models/notes.dart';
+import '../widgets/widgets.dart';
 
 ///[EditNotePage] will be displayed when:
 ///The [FloatingActionButton] button in [HomePage] is clicked (Add a new Note to the [AppDatabase]).
@@ -25,24 +25,26 @@ class EditNotePage extends StatelessWidget {
 
   EditNotePage({
     Key key,
-    Note note,
+    Map<String, dynamic> row,
     this.scaffold,
-  })  : appBarTitle = note == null ? 'Add Note' : 'Edit Note',
-        _note = note ?? Note(),
+  })  : appBarTitle = row == null ? 'Add Note' : 'Edit Note',
+        _note = row == null ? Note() : Note.fromRow(row),
         super(key: key) {
     titleController.text = _note.title;
     descriptionController.text = _note.description;
+    reminderController.text = _note.getFormatedDate;
   }
-
   Future<void> saveNote(BuildContext context) async {
+    Notes builder = context.read<Notes>();
+
     _note
       ..title = titleController.text
       ..description = descriptionController.text;
 
     if (appBarTitle == 'Add Note')
-      await AppDatabase.insertRow('notes', _note.toRow());
+      await builder.add(_note);
     else
-      await AppDatabase.updateRow('notes', _note.toRow());
+      await builder.update(_note);
 
     Navigator.pop(context);
 
@@ -102,6 +104,7 @@ class EditNotePage extends StatelessWidget {
                     titleController.text = '';
                     descriptionController.text = '';
                     reminderController.text = '';
+                    _note.reminder = '';
                   },
                 ),
               ),

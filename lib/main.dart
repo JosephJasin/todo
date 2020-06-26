@@ -1,8 +1,12 @@
-import 'package:NotesAndGoals/tools/appDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'routes/editNotePage.dart';
+import 'package:provider/provider.dart';
+
+import 'appDatabase.dart';
+import 'models/notes.dart';
+import 'models/goals.dart';
+
 import 'routes/homePage.dart';
 
 import 'themes.dart';
@@ -13,7 +17,7 @@ void main() async {
 
   //await AppDatabase.deleteAppDatabase();
 
-  await AppDatabase.diplayTable('notes');
+  //await AppDatabase.diplayTable('notes');
 }
 
 class App extends StatefulWidget {
@@ -42,10 +46,16 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: Themes.redTheme,
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Notes>(create: (context) => Notes()),
+        ChangeNotifierProvider<Goals>(create: (context) => Goals()),
+      ],
+      child: MaterialApp(
+        theme: Themes.redTheme,
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
+      ),
     );
   }
 }

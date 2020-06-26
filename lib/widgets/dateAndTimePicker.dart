@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import 'package:NotesAndGoals/tools/note.dart';
+part of widgets;
 
 ///Pick a Date & Time for [note.reminder].
 class DateAndTimePicker extends StatefulWidget {
@@ -26,7 +23,7 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
   @override
   void initState() {
     super.initState();
-    selectedDate = DateTime.tryParse(widget.note.reminder) ?? DateTime.now();
+    selectedDate = widget.note.getReminder ?? DateTime.now();
   }
 
   Future<void> showDateThanTime() async {
@@ -60,11 +57,11 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
       tempTime.minute,
     );
 
-    widget.controller.text = DateFormat('y/MMM/d').format(selectedDate) +
-        ' , ' +
-        DateFormat.jm().format(selectedDate);
-
     widget.note.reminder = selectedDate.toString();
+
+    setState(() {
+      widget.controller.text = widget.note.getFormatedDate;
+    });
   }
 
   Widget build(BuildContext context) {
