@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-
 import 'editNotePage.dart';
 import './notePage.dart';
 import './settingsPage.dart';
@@ -11,10 +10,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
+
   final _scaffold = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+  
     return DefaultTabController(
       initialIndex: 0,
       length: 3,

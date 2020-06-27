@@ -12,7 +12,14 @@ class SettingsPage extends StatelessWidget {
     return ListView(
       children: <Widget>[
         ListTile(
-          title: Text('App Color'),
+          trailing: Icon(Icons.priority_high),
+          title: Text(
+            'Restart the app to apply all changes',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+        ListTile(
+          title: const Text('App Color'),
           trailing: Container(
             height: 25,
             width: 25,
@@ -55,7 +62,8 @@ class _ColorPickerState extends State<ColorPicker> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Choose  color'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      title: Text('Choose a color'),
       content: Wrap(
         spacing: 10,
         runSpacing: 10,
@@ -68,7 +76,7 @@ class _ColorPickerState extends State<ColorPicker> {
       actions: <Widget>[
         FlatButton(
           textColor: Theme.of(context).primaryColor,
-          child: Text('Cancel'),
+          child: Text('Back'),
           onPressed: () => Navigator.pop(context),
         ),
       ],

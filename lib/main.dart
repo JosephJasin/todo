@@ -25,6 +25,10 @@ void main() async {
     color = Colors.red;
   }
 
+  SystemChrome.setEnabledSystemUIOverlays([
+    SystemUiOverlay.top,
+  ]);
+
   runApp(
     MultiProvider(
       providers: [
@@ -35,6 +39,15 @@ void main() async {
       ],
       child: Consumer<Settings>(
         builder: (context, Settings builder, child) {
+          print('build');
+
+          SystemChrome.setSystemUIOverlayStyle(
+            SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              systemNavigationBarColor: builder.color,
+            ),
+          );
+
           return App(color: builder.color);
         },
       ),
@@ -53,16 +66,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([
-      SystemUiOverlay.top,
-    ]);
-
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: color,
-      ),
-    );
     return MaterialApp(
       theme: Themes(themeColor: color).themeData,
       debugShowCheckedModeBanner: false,
