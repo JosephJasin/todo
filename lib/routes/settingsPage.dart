@@ -33,7 +33,18 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-List<Color> colors = colorToName.keys.toList();
+// List<Color> colors = [colorToName.keys.toList()];
+
+const List<Color> colors = [
+  Colors.red,
+  Colors.cyan,
+  Colors.blue,
+  Colors.green,
+  Colors.teal,
+  Colors.amber,
+  Colors.pink,
+  Colors.purple,
+];
 
 class ColorPicker extends StatefulWidget {
   @override
