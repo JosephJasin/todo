@@ -40,8 +40,7 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-// List<Color> colors = [colorToName.keys.toList()];
-
+///CHANGE ME IF(you want to add a new color).
 const List<Color> colors = [
   Colors.red,
   Colors.cyan,

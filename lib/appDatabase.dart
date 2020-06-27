@@ -113,4 +113,10 @@ class AppDatabase {
         ? await _database.query(table, orderBy: orderBy)
         : null;
   }
+
+  static Future<Map<String, dynamic>> getRow(String table, int id) async {
+    return _tables.containsFirst(table)
+        ? (await _database.query(table, where: 'id = $id')).first
+        : null;
+  }
 }

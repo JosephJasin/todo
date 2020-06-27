@@ -1,4 +1,4 @@
-# NotesAndGoals
+# todo
 
 A new Flutter project.
 
