@@ -1,5 +1,9 @@
-name: NotesAndGoals
-description: A new Flutter project.
+name: todo
+description: 'A customizable cross platform app for Android & Ios using Dart & Flutter to 
+1 - store your notes using Sqlite database,
+2 - set a reminder for each note,
+3 - export your database so you can access it outside the app,
+4 - import a database.'
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -31,6 +35,9 @@ dependencies:
   path_provider: ^1.6.11
   shared_preferences: ^0.5.7+3
   flutter_local_notifications: ^1.4.4+1
+  file_picker: ^1.12.0
+  material_design_icons_flutter: ^4.0.5345
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -68,9 +75,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
+  #   - family: CustomIcons
   #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: assets/Import.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

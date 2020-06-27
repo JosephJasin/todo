@@ -28,7 +28,7 @@ class Themes {
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: themeColor,
-            foregroundColor: themeColor,
+            foregroundColor: Colors.white,
             splashColor: Colors.white,
           ),
           inputDecorationTheme: InputDecorationTheme(

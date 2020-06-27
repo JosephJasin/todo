@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
-
-import '../models/settings.dart';
+part of pages;
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key key}) : super(key: key);
@@ -11,13 +7,19 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
+        //Alert
         ListTile(
-          trailing: Icon(Icons.priority_high),
+          trailing: Icon(
+            Icons.priority_high,
+            color: Theme.of(context).primaryColor,
+          ),
           title: Text(
             'Restart the app to apply all changes',
             style: TextStyle(color: Colors.grey),
           ),
         ),
+
+        //Color
         ListTile(
           title: const Text('App Color'),
           trailing: Container(
@@ -35,6 +37,16 @@ class SettingsPage extends StatelessWidget {
             );
           },
         )
+
+        //import
+        ,
+        ListTile(
+          title: Text('Import a database'),
+          trailing: Icon(
+            MdiIcons.import,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
       ],
     );
   }

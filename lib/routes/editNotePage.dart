@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../appDatabase.dart';
-import '../models/notes.dart';
-import '../widgets/widgets.dart';
+part of pages;
 
 ///[EditNotePage] will be displayed when:
 ///The [FloatingActionButton] button in [HomePage] is clicked (Add a new Note to the [AppDatabase]).
@@ -122,6 +117,118 @@ class EditNotePage extends StatelessWidget {
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+class CustomSlider extends StatefulWidget {
+  final Note note;
+
+  CustomSlider(this.note, {Key key})
+      : assert(note != null),
+        super(key: key);
+
+  @override
+  _CustomSliderState createState() => _CustomSliderState();
+}
+
+class _CustomSliderState extends State<CustomSlider> {
+  double _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.note.priority.toDouble() ?? 1;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Slider(
+        min: 1,
+        max: 5,
+        divisions: 4,
+        value: _value,
+        onChanged: (value) => setState(() => _value = value),
+        onChangeEnd: (value) => widget.note.priority = value.toInt(),
+        label: '$_value',
+      ),
+    );
+  }
+}
+
+///Pick a Date & Time for [note.reminder].
+class DateAndTimePicker extends StatefulWidget {
+  final Note note;
+  final TextEditingController controller;
+
+  DateAndTimePicker(
+    this.note, {
+    Key key,
+    TextEditingController controller,
+  })  : assert(note != null),
+        this.controller = controller ?? TextEditingController(),
+        super(key: key);
+
+  @override
+  _DateAndTimePickerState createState() => _DateAndTimePickerState();
+}
+
+class _DateAndTimePickerState extends State<DateAndTimePicker> {
+  DateTime selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDate = widget.note.getReminder ?? DateTime.now();
+  }
+
+  Future<void> showDateThanTime() async {
+    //If the user click the cancel button , the value of [tempDate] will be [null].
+    final DateTime tempDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+
+    if (tempDate == null) return;
+
+    //If the user click the cancel button , the value of [tempTime] will be [null].
+    TimeOfDay tempTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(
+        hour: selectedDate.hour,
+        minute: selectedDate.minute,
+      ),
+    );
+
+    if (tempTime == null) return;
+
+    selectedDate = DateTime(
+      tempDate.year,
+      tempDate.month,
+      tempDate.day,
+      tempTime.hour,
+      tempTime.minute,
+    );
+
+    widget.note.reminder = selectedDate.toString();
+
+    setState(() {
+      widget.controller.text = widget.note.getFormatedDate;
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return TextField(
+      readOnly: true,
+      controller: widget.controller,
+      onTap: showDateThanTime,
+      decoration: InputDecoration(
+        labelText: 'Remind me at',
+        suffixIcon: const Icon(Icons.date_range),
       ),
     );
   }

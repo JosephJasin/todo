@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
-import 'editNotePage.dart';
-import './notePage.dart';
-import './settingsPage.dart';
+part of pages;
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,17 +6,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
-
   final _scaffold = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-  
     return DefaultTabController(
       initialIndex: 0,
-      length: 3,
+      length: 2,
       child: Scaffold(
         key: _scaffold,
         appBar: PreferredSize(
@@ -32,12 +24,6 @@ class _HomePageState extends State<HomePage> {
                   child: Align(
                     alignment: Alignment.center,
                     child: const Text("Notes"),
-                  ),
-                ),
-                const Tab(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: const Text("Goals"),
                   ),
                 ),
                 const Tab(
@@ -55,7 +41,6 @@ class _HomePageState extends State<HomePage> {
             NotePage(
               scaffoldKey: _scaffold,
             ),
-            Icon(Icons.movie),
             SettingsPage(),
           ],
         ),
@@ -65,6 +50,7 @@ class _HomePageState extends State<HomePage> {
             return const FloatingActionButton(
               onPressed: null,
               child: Icon(Icons.add),
+              tooltip: 'Add a new note',
             );
           },
           openBuilder: (context, action) => EditNotePage(

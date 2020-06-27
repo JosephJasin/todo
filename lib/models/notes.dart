@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import '../tools.dart';
 import '../appDatabase.dart';
 
 class Note {
@@ -21,14 +20,12 @@ class Note {
   }
 
   //CHANGE ME IF(a new proprity is added to the [Note])
-  static const tableCreation = const Pair<String, String>(
-      'notes',
-      'id INTEGER PRIMARY KEY,' +
-          'priority INTEGER,' +
-          'done INTEGER,' +
-          'title TEXT,' +
-          'description TEXT,' +
-          'reminder TEXT ');
+  static const tableCreation = 'id INTEGER PRIMARY KEY,' +
+      'priority INTEGER,' +
+      'done INTEGER,' +
+      'title TEXT,' +
+      'description TEXT,' +
+      'reminder TEXT ';
 
 //CHANGE ME IF(a new proprity is added to the [Note])
   Note({
@@ -84,29 +81,26 @@ class Notes extends ChangeNotifier {
   }
 
   Future<void> _load() async {
-    _notes = await AppDatabase.getTableRows('notes');
+    _notes = await AppDatabase.getTableRows();
     notesLength = _notes.length;
     notifyListeners();
   }
 
   Future<void> add(Note note) async {
-    await AppDatabase.insertRow('notes', note.toRow());
+    await AppDatabase.insertRow(note.toRow());
     await _load();
     notifyListeners();
   }
 
   Future<void> update(Note note) async {
-    await AppDatabase.updateRow('notes', note.toRow(),
-        where: 'id = ${note.id}');
+    await AppDatabase.updateRow(note.toRow(), where: 'id = ${note.id}');
     await _load();
     notifyListeners();
   }
 
   Future<void> remove(Note note) async {
-    await AppDatabase.deleteRow('notes', 'id = ${note.id}');
+    await AppDatabase.deleteRow('id = ${note.id}');
     await _load();
     notifyListeners();
   }
-
-
 }

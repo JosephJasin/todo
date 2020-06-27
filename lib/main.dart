@@ -6,11 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'appDatabase.dart';
 import 'models/notes.dart';
-import 'models/goals.dart';
 import 'models/settings.dart';
 
-import 'routes/homePage.dart';
-import 'routes/editNotePage.dart';
+import 'routes/pages.dart';
 
 import 'themes.dart';
 
@@ -35,7 +33,6 @@ void main() async {
         ChangeNotifierProvider<Settings>(
             create: (context) => Settings(color: color)),
         ChangeNotifierProvider<Notes>(create: (context) => Notes()),
-        ChangeNotifierProvider<Goals>(create: (context) => Goals()),
       ],
       child: Consumer<Settings>(
         builder: (context, Settings builder, child) {

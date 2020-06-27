@@ -1,9 +1,4 @@
-import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../models/notes.dart';
-import '../routes/editNotePage.dart';
+part of pages;
 
 class NotePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
