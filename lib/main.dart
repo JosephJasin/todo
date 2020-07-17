@@ -59,6 +59,7 @@ void main() async {
 
 class App extends StatelessWidget {
   final Color color;
+
   const App({this.color = Colors.red});
 
   @override
