@@ -12,8 +12,7 @@ class Note {
 
   String get getFormatedDate {
     if (reminder.isNotEmpty)
-      return DateFormat('y/MMM/d').format(getReminder) +
-          ' , ' +
+      return DateFormat('MMM d, ').format(getReminder) +
           DateFormat.jm().format(getReminder);
     else
       return '';

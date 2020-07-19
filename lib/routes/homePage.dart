@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           children: [
             NotePage(
               scaffoldKey: _scaffold,

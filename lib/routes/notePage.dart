@@ -11,16 +11,33 @@ class NotePage extends StatelessWidget {
       builder: (context, Notes builder, child) {
         return ListView.builder(
           itemCount: builder.notesLength,
+          itemExtent: 150,
           itemBuilder: (context, index) {
-            return OpenContainer(
-              closedElevation: 0,
-              openElevation: 0,
-              closedBuilder: (context, action) => NoteWidget(
-                builder.notes[index],
+            final row = builder.notes[index];
+            return Dismissible(
+              key: ValueKey<int>(index),
+              background: ColoredBox(
+                color: Colors.red,
               ),
-              openBuilder: (context, action) => EditNotePage(
-                row: builder.notes[index],
-                scaffold: scaffoldKey,
+              direction: DismissDirection.startToEnd,
+              dismissThresholds: const {
+                DismissDirection.startToEnd:0.5
+              },
+
+              onDismissed: (dismissDirection){
+                builder.remove(Note.fromRow(row));
+              },
+
+              child: OpenContainer(
+                closedElevation: 0,
+                openElevation: 0,
+                closedBuilder: (context, action) => NoteWidget(
+                  row,
+                ),
+                openBuilder: (context, action) => EditNotePage(
+                  row: row,
+                  scaffold: scaffoldKey,
+                ),
               ),
             );
           },
@@ -29,82 +46,6 @@ class NotePage extends StatelessWidget {
     );
   }
 }
-
-extension on int {
-  bool toBool() => this == 1;
-}
-
-extension on bool {
-  int toInt() => this ? 1 : 0;
-}
-
-//oldNote Widget
-
-//class NoteWidget extends StatelessWidget {
-//  final Note note;
-//
-//  NoteWidget(Map<String, dynamic> row, {Key key})
-//      : note = Note.fromRow(row),
-//        assert(row != null),
-//        super(key: key);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Padding(
-//      padding: const EdgeInsets.symmetric(
-//        horizontal: 1,
-//        vertical: 2,
-//      ),
-//      child: Card(
-//        shape: RoundedRectangleBorder(
-//          borderRadius: BorderRadius.circular(2),
-//          side: const BorderSide(color: Colors.grey),
-//        ),
-//        child: ListTile(
-//          title: Text(note.title),
-//          subtitle: Text(note.getFormatedDate),
-//          leading: Checkbox(
-//            value: note.done.toBool(),
-//            onChanged: (value) {
-//              note.done = value.toInt();
-//              if (value) note.priority = 1;
-//              context.read<Notes>().update(note);
-//            },
-//          ),
-//          trailing: IconButton(
-//            icon: Icon(
-//              Icons.delete,
-//              color: Theme.of(context).primaryColor,
-//            ),
-//            onPressed: () {
-//              showDialog(
-//                context: context,
-//                builder: (context) => AlertDialog(
-//                  content: Text('Do you want to delete this note'),
-//                  actions: <Widget>[
-//                    FlatButton(
-//                      textColor: Theme.of(context).primaryColor,
-//                      child: Text('No'),
-//                      onPressed: () => Navigator.pop(context),
-//                    ),
-//                    FlatButton(
-//                      textColor: Theme.of(context).primaryColor,
-//                      child: Text('Yes'),
-//                      onPressed: () async {
-//                        await context.read<Notes>().remove(note);
-//                        Navigator.pop(context);
-//                      },
-//                    )
-//                  ],
-//                ),
-//              );
-//            },
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//}
 
 //new note widget
 class NoteWidget extends StatelessWidget {
@@ -130,6 +71,9 @@ class NoteWidget extends StatelessWidget {
   }
 }
 
+//[redColor] for max prioriy (3)
+//[yelloColor] for intermediate prioriy (2)
+//[greeColor] for trivial priority (1)
 const redColor = const Color(0xffFF0057);
 const yellowColor = const Color(0xffFFE600);
 const greenColor = const Color(0xff00FF80);
@@ -155,10 +99,10 @@ class NoteWidgetPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final max = math.max<double>(size.width, size.height);
+    const diameter = 25.0;
 
     final rrect = RRect.fromLTRBR(
-      25,
+      diameter,
       0,
       size.width,
       size.height,
@@ -172,9 +116,9 @@ class NoteWidgetPainter extends CustomPainter {
       _whitePaint,
     );
 
-    final circleCenter = Offset(25, size.height / 2);
+    final circleCenter = Offset(diameter, size.height / 2);
 
-    canvas.drawCircle(circleCenter, 25, _circlePaint);
+    canvas.drawCircle(circleCenter, diameter, _circlePaint);
 
     //Draw "!"
     {
@@ -204,8 +148,9 @@ class NoteWidgetPainter extends CustomPainter {
     //Draw The title of note.
     {
       final tp = TextPainter(
+        maxLines: 1,
         text: TextSpan(
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 25,
           ),
@@ -215,10 +160,10 @@ class NoteWidgetPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
 
-      tp.layout();
+      tp.layout(maxWidth: size.width / 1.5);
       final position = Offset(
         size.width / 2 - (tp.width / 2),
-        20,
+        circleCenter.dy - (tp.height / 2),
       );
 
       tp.paint(canvas, position);
@@ -227,21 +172,21 @@ class NoteWidgetPainter extends CustomPainter {
     //Draw The date of note.
     {
       final tp = TextPainter(
+        maxLines: 1,
         text: TextSpan(
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 25,
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 20,
           ),
           text: note.getFormatedDate,
         ),
-        textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       );
 
-      tp.layout();
+      tp.layout(maxWidth: size.width / 1.5);
       final position = Offset(
-        30,
-        50,
+        35,
+        size.height - (tp.height),
       );
 
       tp.paint(canvas, position);
@@ -249,7 +194,5 @@ class NoteWidgetPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
