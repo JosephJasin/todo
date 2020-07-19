@@ -4,12 +4,12 @@ part of pages;
 ///The [FloatingActionButton] button in [HomePage] is clicked (Add a new Note to the [AppDatabase]).
 ///any [NoteWidget] is clicked (Edit a Note in the [AppDatabase]).
 class EditNotePage extends StatelessWidget {
-  ///[appBarTitle] = 'Add Note' if [Note] is [null]
+  ///[appBarTitle] = 'Add Note' if [row] is [null]
   ///otherwise = 'Edit Note'.
   final String appBarTitle;
 
   final Note _note;
-
+  final Map<String, dynamic> row;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final reminderController = TextEditingController();
@@ -20,7 +20,7 @@ class EditNotePage extends StatelessWidget {
 
   EditNotePage({
     Key key,
-    Map<String, dynamic> row,
+    this.row,
     this.scaffold,
   })  : appBarTitle = row == null ? 'Add Note' : 'Edit Note',
         _note = row == null ? Note() : Note.fromRow(row),
@@ -54,10 +54,55 @@ class EditNotePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarTitle),
+        leading: IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text(appBarTitle,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         actions: <Widget>[
+          if (row != null)
+            IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.delete_forever),
+              onPressed: () async {
+                await showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    title: Text('Do you want to delete this note ?'),
+                    actions: [
+                      FlatButton(
+                        textColor: Theme.of(context).primaryColor,
+                        child: Text('Yes'),
+                        onPressed: () async {
+                          await Provider.of<Notes>(context, listen: false)
+                              .remove(_note);
+                          Navigator.of(context)..pop()..pop();
+                        },
+                      ),
+                      FlatButton(
+                        textColor: Theme.of(context).primaryColor,
+                        child: Text('No'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          if (row != null) SizedBox(width: 5),
           IconButton(
-            icon: Icon(Icons.save),
+            icon: Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
             onPressed: () => saveNote(context),
           ),
         ],
@@ -65,17 +110,24 @@ class EditNotePage extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.all(10),
         children: <Widget>[
-          TextField(
+          ColoredBox(
+            color: whiteGreyColor,
+            child: TextField(
               controller: titleController,
-              decoration: InputDecoration(labelText: 'Title')),
-          const SizedBox(height: 10),
-          TextField(
-            controller: descriptionController,
-            decoration: InputDecoration(
-              labelText: 'Description',
+              decoration: InputDecoration(labelText: 'Title'),
             ),
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
+          ),
+          const SizedBox(height: 10),
+          ColoredBox(
+            color: whiteGreyColor,
+            child: TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Description',
+              ),
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+            ),
           ),
           const SizedBox(height: 10),
           DateAndTimePicker(
@@ -85,40 +137,50 @@ class EditNotePage extends StatelessWidget {
           const SizedBox(height: 10),
 
           //[_note] is passed to [CustomSlider] to provide the value of [_note.priority].
-          Text(' Priority ( higher is more important )'),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text('Priority' , style: TextStyle(fontSize: 17),),
+          ),
           CustomSlider(_note),
-
-          //Clear & Save buttons.
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: FlatButton(
-                  color: Theme.of(context).primaryColor,
-                  child: Text('Clear', style: TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    titleController.text = '';
-                    descriptionController.text = '';
-                    reminderController.text = '';
-                    _note.reminder = '';
-                  },
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: FlatButton(
-                  color: Theme.of(context).primaryColor,
-                  child: Text(
-                    'Save',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () => saveNote(context),
-                ),
-              ),
-            ],
-          )
         ],
       ),
     );
+  }
+}
+
+class IconWithText extends StatelessWidget {
+  final bool enabled;
+  final IconData iconData;
+  final String text;
+  final Color color;
+
+  const IconWithText(
+      {Key key,
+      this.color = redColor,
+      this.iconData,
+      this.text = '',
+      this.enabled = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: (MediaQuery.of(context).size.width - 36) / 3,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              iconData,
+              color: color,
+            ),
+            SizedBox(width: 4.0),
+            Text(
+              text,
+              style: TextStyle(
+                  color: enabled ? Colors.white : color, fontSize: 17),
+            )
+          ],
+        ));
   }
 }
 
@@ -134,25 +196,50 @@ class CustomSlider extends StatefulWidget {
 }
 
 class _CustomSliderState extends State<CustomSlider> {
-  double _value;
+  var _values = <bool>[false, false, false];
 
   @override
   void initState() {
     super.initState();
-    _value = widget.note.priority.toDouble() ?? 1;
+    _values[widget.note.priority - 1] = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Slider(
-        min: 1,
-        max: 5,
-        divisions: 4,
-        value: _value,
-        onChanged: (value) => setState(() => _value = value),
-        onChangeEnd: (value) => widget.note.priority = value.toInt(),
-        label: '$_value',
+    return Padding(
+      padding: EdgeInsets.only(left: 7),
+      child: ToggleButtons(
+        fillColor: Theme.of(context).primaryColor,
+        renderBorder: false,
+        children: <Widget>[
+          IconWithText(
+            enabled: _values[0],
+            iconData: Icons.spa,
+            text: 'Low',
+            color: greenColor,
+          ),
+          IconWithText(
+            enabled: _values[1],
+            iconData: MdiIcons.alertOctagonOutline,
+            text: 'Medium',
+            color: Colors.yellow[700],
+          ),
+          IconWithText(
+            enabled: _values[2],
+            iconData: Icons.whatshot,
+            text: 'High',
+            color: redColor,
+          ),
+        ],
+        onPressed: (index) {
+          setState(() {
+            _values = [false, false, false];
+            _values[index] = true;
+
+            widget.note.priority = index + 1;
+          });
+        },
+        isSelected: _values,
       ),
     );
   }
@@ -222,13 +309,16 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
   }
 
   Widget build(BuildContext context) {
-    return TextField(
-      readOnly: true,
-      controller: widget.controller,
-      onTap: showDateThanTime,
-      decoration: InputDecoration(
-        labelText: 'Remind me at',
-        suffixIcon: const Icon(Icons.date_range),
+    return ColoredBox(
+      color: whiteGreyColor,
+      child: TextField(
+        readOnly: true,
+        controller: widget.controller,
+        onTap: showDateThanTime,
+        decoration: InputDecoration(
+          labelText: 'Remind me at',
+          suffixIcon: const Icon(Icons.date_range),
+        ),
       ),
     );
   }

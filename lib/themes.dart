@@ -40,26 +40,7 @@ class Themes {
               borderSide: BorderSide(color: themeColor),
             ),
           ),
-          sliderTheme: SliderThemeData(
-            showValueIndicator: ShowValueIndicator.onlyForDiscrete,
-            valueIndicatorColor:
-                HSVColor.fromColor(themeColor).withValue(0.7).toColor(),
-            activeTrackColor:
-                HSVColor.fromColor(themeColor).withValue(0.7).toColor(),
-            inactiveTrackColor:
-                HSVColor.fromColor(themeColor).withSaturation(0.6).toColor(),
-            trackShape: const RectangularSliderTrackShape(),
-            trackHeight: 4.0,
-            thumbColor:
-                HSVColor.fromColor(themeColor).withSaturation(0.6).toColor(),
-            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
-            overlayColor: themeColor.withAlpha(32),
-            overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
-            activeTickMarkColor:
-                HSVColor.fromColor(themeColor).withValue(0.6).toColor(),
-            inactiveTickMarkColor:
-                HSVColor.fromColor(themeColor).withValue(0.6).toColor(),
-          ),
           indicatorColor: Colors.red,
+
         );
 }

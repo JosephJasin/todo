@@ -14,30 +14,15 @@ class NotePage extends StatelessWidget {
           itemExtent: 150,
           itemBuilder: (context, index) {
             final row = builder.notes[index];
-            return Dismissible(
-              key: ValueKey<int>(index),
-              background: ColoredBox(
-                color: Colors.red,
+            return OpenContainer(
+              closedElevation: 0,
+              openElevation: 0,
+              closedBuilder: (context, action) => NoteWidget(
+                row,
               ),
-              direction: DismissDirection.startToEnd,
-              dismissThresholds: const {
-                DismissDirection.startToEnd:0.5
-              },
-
-              onDismissed: (dismissDirection){
-                builder.remove(Note.fromRow(row));
-              },
-
-              child: OpenContainer(
-                closedElevation: 0,
-                openElevation: 0,
-                closedBuilder: (context, action) => NoteWidget(
-                  row,
-                ),
-                openBuilder: (context, action) => EditNotePage(
-                  row: row,
-                  scaffold: scaffoldKey,
-                ),
+              openBuilder: (context, action) => EditNotePage(
+                row: row,
+                scaffold: scaffoldKey,
               ),
             );
           },
@@ -71,12 +56,7 @@ class NoteWidget extends StatelessWidget {
   }
 }
 
-//[redColor] for max prioriy (3)
-//[yelloColor] for intermediate prioriy (2)
-//[greeColor] for trivial priority (1)
-const redColor = const Color(0xffFF0057);
-const yellowColor = const Color(0xffFFE600);
-const greenColor = const Color(0xff00FF80);
+
 
 class NoteWidgetPainter extends CustomPainter {
   final Note note;
@@ -119,15 +99,31 @@ class NoteWidgetPainter extends CustomPainter {
     final circleCenter = Offset(diameter, size.height / 2);
 
     canvas.drawCircle(circleCenter, diameter, _circlePaint);
+    if (note.priority == 3) {
+      const icon = Icons.whatshot;
+      final builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(fontFamily: icon.fontFamily, fontSize: diameter),
+      )..addText(String.fromCharCode(icon.codePoint));
+
+      final para = builder.build();
+
+      para.layout(const ui.ParagraphConstraints(width: 0));
+      canvas.drawParagraph(
+          para,
+          Offset(
+            circleCenter.dx - (para.height / 2),
+            circleCenter.dy - (para.height / 2),
+          ));
+    }
 
     //Draw "!"
-    {
+    else if (note.priority == 2) {
       final tp = TextPainter(
         text: const TextSpan(
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 35,
+            fontSize: diameter * 1.5,
           ),
           text: '!',
         ),
@@ -143,6 +139,21 @@ class NoteWidgetPainter extends CustomPainter {
       );
 
       tp.paint(canvas, position);
+    } else {
+      const icon = Icons.spa;
+      final builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(fontFamily: icon.fontFamily, fontSize: diameter),
+      )..addText(String.fromCharCode(icon.codePoint));
+
+      final para = builder.build();
+
+      para.layout(const ui.ParagraphConstraints(width: 0));
+      canvas.drawParagraph(
+          para,
+          Offset(
+            circleCenter.dx - (para.height / 2),
+            circleCenter.dy - (para.height / 2),
+          ));
     }
 
     //Draw The title of note.
@@ -185,8 +196,8 @@ class NoteWidgetPainter extends CustomPainter {
 
       tp.layout(maxWidth: size.width / 1.5);
       final position = Offset(
-        35,
-        size.height - (tp.height),
+        40,
+        size.height - (tp.height) - 5,
       );
 
       tp.paint(canvas, position);
@@ -194,5 +205,7 @@ class NoteWidgetPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(NoteWidgetPainter old) {
+    return old.note != note;
+  }
 }
