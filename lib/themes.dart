@@ -41,6 +41,22 @@ class Themes {
             ),
           ),
           indicatorColor: Colors.red,
-
+          
+          //The color of [DatePicker]
+          primarySwatch: MaterialColor(
+            themeColor.value,
+            <int, Color>{
+              50: themeColor,
+              100: themeColor,
+              200: themeColor,
+              300: themeColor,
+              400: themeColor,
+              500: themeColor,
+              600: themeColor,
+              700: themeColor,
+              800: themeColor,
+              900: themeColor,
+            },
+          ),
         );
 }
