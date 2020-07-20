@@ -139,108 +139,125 @@ class EditNotePage extends StatelessWidget {
           //[_note] is passed to [CustomSlider] to provide the value of [_note.priority].
           Padding(
             padding: EdgeInsets.all(10),
-            child: Text('Priority' , style: TextStyle(fontSize: 17),),
+            child: Text(
+              'Priority',
+              style: TextStyle(fontSize: 17),
+            ),
           ),
-          CustomSlider(_note),
+          MyToggleButtons(_note),
         ],
       ),
     );
   }
 }
 
-class IconWithText extends StatelessWidget {
-  final bool enabled;
-  final IconData iconData;
-  final String text;
-  final Color color;
+class MyToggleButtons extends StatefulWidget {
+  final Note note;
 
-  const IconWithText(
-      {Key key,
-      this.color = redColor,
-      this.iconData,
-      this.text = '',
-      this.enabled = false})
-      : super(key: key);
+  MyToggleButtons(this.note, {Key key})
+      : assert(note != null),
+        super(key: key);
+  @override
+  _MyToggleButtonsState createState() => _MyToggleButtonsState();
+}
+
+class SelectedButton extends StatelessWidget {
+  final bool isEnabled;
+  final Color disabledColor;
+  final String label;
+  final IconData iconData;
+  final int index;
+  final Function(int index) setValue;
+
+  const SelectedButton({
+    Key key,
+    @required this.index,
+    @required this.setValue,
+    @required this.iconData,
+    this.label = '',
+    this.isEnabled = false,
+    this.disabledColor = Colors.black,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: (MediaQuery.of(context).size.width - 36) / 3,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              iconData,
-              color: color,
-            ),
-            SizedBox(width: 4.0),
-            Text(
-              text,
-              style: TextStyle(
-                  color: enabled ? Colors.white : color, fontSize: 17),
-            )
-          ],
-        ));
+    return FlatButton.icon(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(100),
+        side: BorderSide(width: 1, color: Colors.grey),
+      ),
+      color: isEnabled ? Theme.of(context).primaryColor : Colors.white,
+      icon: Icon(
+        iconData,
+        color: isEnabled ? Colors.white : disabledColor,
+      ),
+      label: Text(
+        label,
+        style: TextStyle(color: isEnabled ? Colors.white : Colors.black),
+      ),
+      onPressed: () => setValue(index),
+    );
   }
 }
 
-class CustomSlider extends StatefulWidget {
-  final Note note;
+class _MyToggleButtonsState extends State<MyToggleButtons> {
+  List<bool> _values = [false, false, false];
 
-  CustomSlider(this.note, {Key key})
-      : assert(note != null),
-        super(key: key);
-
-  @override
-  _CustomSliderState createState() => _CustomSliderState();
-}
-
-class _CustomSliderState extends State<CustomSlider> {
-  var _values = <bool>[false, false, false];
+  void setValue(int index) {
+    setState(() {
+      _values = [false, false, false];
+      _values[index] = true;
+      widget.note.priority = index;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _values[widget.note.priority - 1] = true;
+    _values[widget.note.priority] = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 7),
-      child: ToggleButtons(
-        fillColor: Theme.of(context).primaryColor,
-        renderBorder: false,
-        children: <Widget>[
-          IconWithText(
-            enabled: _values[0],
+    return Row(
+      children: [
+        Expanded(
+          child: SelectedButton(
+            isEnabled: _values[0],
             iconData: Icons.spa,
-            text: 'Low',
-            color: greenColor,
+            index: 0,
+            disabledColor: greenColor,
+            setValue: setValue,
+            label: 'Low',
           ),
-          IconWithText(
-            enabled: _values[1],
+        ),
+        VerticalDivider(
+          width: 10,
+        ),
+        Expanded(
+          child: SelectedButton(
+            isEnabled: _values[1],
             iconData: MdiIcons.alertOctagonOutline,
-            text: 'Medium',
-            color: Colors.yellow[700],
+            index: 1,
+            disabledColor: yellowColor,
+            setValue: setValue,
+            label: 'Medium',
           ),
-          IconWithText(
-            enabled: _values[2],
+        ),
+        VerticalDivider(
+          width: 10,
+        ),
+        Expanded(
+          child: SelectedButton(
+            isEnabled: _values[2],
             iconData: Icons.whatshot,
-            text: 'High',
-            color: redColor,
+            index: 2,
+            disabledColor: redColor,
+            setValue: setValue,
+            label: 'High',
           ),
-        ],
-        onPressed: (index) {
-          setState(() {
-            _values = [false, false, false];
-            _values[index] = true;
-
-            widget.note.priority = index + 1;
-          });
-        },
-        isSelected: _values,
-      ),
+        ),
+      ],
     );
   }
 }

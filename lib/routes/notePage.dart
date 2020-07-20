@@ -66,13 +66,13 @@ class NoteWidgetPainter extends CustomPainter {
 
   NoteWidgetPainter(this.note, {Listenable repaint}) : super(repaint: repaint) {
     switch (note.priority) {
-      case 1:
+      case 0:
         _circlePaint.color = greenColor;
         break;
-      case 2:
+      case 1:
         _circlePaint.color = yellowColor;
         break;
-      case 3:
+      case 2:
         _circlePaint.color = redColor;
     }
   }
@@ -99,7 +99,7 @@ class NoteWidgetPainter extends CustomPainter {
     final circleCenter = Offset(diameter, size.height / 2);
 
     canvas.drawCircle(circleCenter, diameter, _circlePaint);
-    if (note.priority == 3) {
+    if (note.priority == 2) {
       const icon = Icons.whatshot;
       final builder = ui.ParagraphBuilder(
         ui.ParagraphStyle(fontFamily: icon.fontFamily, fontSize: diameter),
@@ -117,7 +117,7 @@ class NoteWidgetPainter extends CustomPainter {
     }
 
     //Draw "!"
-    else if (note.priority == 2) {
+    else if (note.priority == 1) {
       final tp = TextPainter(
         text: const TextSpan(
           style: const TextStyle(

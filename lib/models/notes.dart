@@ -28,7 +28,7 @@ class Note {
 
 //CHANGE ME IF(a new proprity is added to the [Note])
   Note({
-    this.priority = 1,
+    this.priority = 0,
     this.done = 0,
     this.title = '',
     this.description = '',
