@@ -7,6 +7,8 @@ class AppDatabase {
   static const String _name = 'AppDatabase.db';
   static Database _database;
 
+  static String get path => _database?.path;
+
   ///Open the database if exits otherwise create it.
   static Future<void> open({int version = 1}) async {
     _database ??= await openDatabase(
@@ -51,8 +53,11 @@ class AppDatabase {
   ///if [where] is null , all the rows will be deleted.
   static Future<int> deleteRow(String where) async {
     await open();
-
     return _database.delete('notes', where: where);
+  }
+
+  static Future<void> deleteAllRows() async {
+    await _database.delete('notes', where: '1');
   }
 
   static Future<List<Map<String, dynamic>>> getTableRows(

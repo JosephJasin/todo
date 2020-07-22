@@ -41,7 +41,7 @@ class Themes {
             ),
           ),
           indicatorColor: Colors.red,
-          
+
           //The color of [DatePicker]
           primarySwatch: MaterialColor(
             themeColor.value,
@@ -58,5 +58,6 @@ class Themes {
               900: themeColor,
             },
           ),
+          dividerColor: Colors.white,
         );
 }

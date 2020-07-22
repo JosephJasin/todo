@@ -1,7 +1,5 @@
 library pages;
 
-import 'dart:math' as math;
-
 import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
@@ -9,9 +7,11 @@ import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
-import 'package:file_picker/file_picker.dart';
 
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:clipboard/clipboard.dart';
+
+import 'package:todo/appDatabase.dart';
 
 import '../models/notes.dart';
 import '../models/settings.dart';

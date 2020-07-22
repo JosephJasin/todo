@@ -72,7 +72,7 @@ class NoteWidgetPainter extends CustomPainter {
       case 1:
         _circlePaint.color = yellowColor;
         break;
-      case 2:
+      default :
         _circlePaint.color = redColor;
     }
   }
