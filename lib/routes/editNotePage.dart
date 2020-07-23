@@ -36,10 +36,26 @@ class EditNotePage extends StatelessWidget {
       ..title = titleController.text
       ..description = descriptionController.text;
 
+    int id;
+
     if (appBarTitle == 'Add Note')
-      await builder.add(_note);
+      id = await builder.add(_note);
     else
-      await builder.update(_note);
+      id = await builder.update(_note);
+
+    if (_note.reminder != null) {
+      final dateTime = DateTime.tryParse(_note.reminder);
+      final controlNotification = ControlNotification(context);
+      controlNotification.pushScheduledNotification(
+        id: id,
+        title: _note.title,
+        body: _note.description,
+        dateTime: dateTime,
+      );
+    } else {
+      final controlNotification = ControlNotification(context);
+      controlNotification.cancelNotification(_note.id);
+    }
 
     Navigator.pop(context);
 
@@ -181,8 +197,6 @@ class SelectedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return FlatButton.icon(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(100),

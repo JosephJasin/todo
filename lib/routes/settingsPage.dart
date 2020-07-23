@@ -179,7 +179,13 @@ class SettingsPage extends StatelessWidget {
               Icons.help_outline,
               color: Theme.of(context).primaryColor,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                CupertinoPageRoute(builder: (context) {
+                  return HelpPage();
+                }),
+              );
+            },
           ),
         ),
 
@@ -191,7 +197,15 @@ class SettingsPage extends StatelessWidget {
               Icons.info_outline,
               color: Theme.of(context).primaryColor,
             ),
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AboutDialog(
+                      applicationName: 'Todo',
+                    );
+                  });
+            },
           ),
         ),
       ],
@@ -209,6 +223,7 @@ const List<Color> colors = [
   Colors.amber,
   Colors.pink,
   Colors.purple,
+  Color(0xff212121),
 ];
 
 class ColorPicker extends StatefulWidget {

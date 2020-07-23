@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'appDatabase.dart';
 import 'models/notes.dart';
 import 'models/settings.dart';
 
@@ -24,6 +23,7 @@ void main() async {
   }
 
   SystemChrome.setEnabledSystemUIOverlays([
+    SystemUiOverlay.bottom,
     SystemUiOverlay.top,
   ]);
 
@@ -36,8 +36,6 @@ void main() async {
       ],
       child: Consumer<Settings>(
         builder: (context, Settings builder, child) {
-          print('build');
-
           SystemChrome.setSystemUIOverlayStyle(
             SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
@@ -50,11 +48,6 @@ void main() async {
       ),
     ),
   );
-  //await AppDatabase.open();
-
-  //await AppDatabase.deleteAppDatabase();
-
-  //await AppDatabase.diplayTable('notes');
 }
 
 class App extends StatelessWidget {

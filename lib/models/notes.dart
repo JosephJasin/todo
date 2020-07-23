@@ -80,16 +80,19 @@ class Notes extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> add(Note note) async {
-    await AppDatabase.insertRow(note.toRow());
+  Future<int> add(Note note) async {
+    int id = await AppDatabase.insertRow(note.toRow());
     await _load();
     notifyListeners();
+
+    return id;
   }
 
-  Future<void> update(Note note) async {
-    await AppDatabase.updateRow(note.toRow(), where: 'id = ${note.id}');
+  Future<int> update(Note note) async {
+    int id= await AppDatabase.updateRow(note.toRow(), where: 'id = ${note.id}');
     await _load();
     notifyListeners();
+    return id;
   }
 
   Future<void> remove(Note note) async {
