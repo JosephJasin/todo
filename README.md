@@ -7,6 +7,9 @@ A cross-platform todo/notes app for Android & Ios devices.
 **1- Write your notes and save them locally.<br />**
 ![Write your notes and save them locally](https://github.com/JosephJasin/todo/blob/master/picturesForGithub/p1.jpeg?raw=true)
 
+![enter image description here](https://github.com/JosephJasin/todo/blob/master/picturesForGithub/p8.jpeg?raw=true)
+
+![enter image description here](https://github.com/JosephJasin/todo/blob/master/picturesForGithub/p7.jpeg?raw=true)
 **2-add a reminder for your notes. <br />**
 ![add a reminder for your notes](https://github.com/JosephJasin/todo/blob/master/picturesForGithub/p10.jpeg?raw=true)
 ![add a reminder for your notes](https://github.com/JosephJasin/todo/blob/master/picturesForGithub/p11.jpeg?raw=true)
