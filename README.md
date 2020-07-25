@@ -1,7 +1,7 @@
 
 # todo
 
-A cross-platform app for Android & Ios devices.
+A cross-platform todo/notes app for Android & Ios devices.
 
 ## App features
 **1- Write your notes and save them locally.<br />**
