@@ -66,102 +66,136 @@ class EditNotePage extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          color: Colors.white,
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Text(appBarTitle,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        actions: <Widget>[
-          if (row != null)
-            IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.delete_forever),
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  child: AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    title: Text('Do you want to delete this note ?'),
-                    actions: [
-                      FlatButton(
-                        textColor: Theme.of(context).primaryColor,
-                        child: Text('Yes'),
-                        onPressed: () async {
-                          await Provider.of<Notes>(context, listen: false)
-                              .remove(_note);
-                          Navigator.of(context)..pop()..pop();
-                        },
-                      ),
-                      FlatButton(
-                        textColor: Theme.of(context).primaryColor,
-                        child: Text('No'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
-          if (row != null) SizedBox(width: 5),
-          IconButton(
-            icon: Icon(
-              Icons.save,
-              color: Colors.white,
-            ),
-            onPressed: () => saveNote(context),
+  Future<void> onPop(BuildContext context) async {
+    await showDialog(
+      context: context,
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        title: Text('Do you want to save changes ?'),
+        actions: [
+          FlatButton(
+            textColor: Theme.of(context).primaryColor,
+            child: Text('No'),
+            onPressed: () {
+              Navigator.of(context)..pop()..pop();
+            },
+          ),
+          FlatButton(
+            textColor: Theme.of(context).primaryColor,
+            child: Text('Yes'),
+            onPressed: () async {
+              await saveNote(context);
+              Navigator.of(context).pop();
+            },
           ),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(10),
-        children: <Widget>[
-          ColoredBox(
-            color: whiteGreyColor,
-            child: TextField(
-              controller: titleController,
-              decoration: InputDecoration(labelText: 'Title'),
-            ),
-          ),
-          const SizedBox(height: 10),
-          ColoredBox(
-            color: whiteGreyColor,
-            child: TextField(
-              controller: descriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description',
-              ),
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-            ),
-          ),
-          const SizedBox(height: 10),
-          DateAndTimePicker(
-            _note,
-            controller: reminderController,
-          ),
-          const SizedBox(height: 10),
+    );
+  }
 
-          //[_note] is passed to [CustomSlider] to provide the value of [_note.priority].
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              'Priority',
-              style: TextStyle(fontSize: 17),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        await onPop(context);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            color: Colors.white,
+            icon: Icon(Icons.arrow_back),
+            onPressed: () async {
+              onPop(context);
+            },
           ),
-          MyToggleButtons(_note),
-        ],
+          title: Text(appBarTitle,
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          actions: <Widget>[
+            if (row != null)
+              IconButton(
+                color: Colors.white,
+                icon: Icon(Icons.delete_forever),
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    child: AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      title: Text('Do you want to delete this note ?'),
+                      actions: [
+                        FlatButton(
+                          textColor: Theme.of(context).primaryColor,
+                          child: Text('Yes'),
+                          onPressed: () async {
+                            await Provider.of<Notes>(context, listen: false)
+                                .remove(_note);
+                            Navigator.of(context)..pop()..pop();
+                          },
+                        ),
+                        FlatButton(
+                          textColor: Theme.of(context).primaryColor,
+                          child: Text('No'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            if (row != null) SizedBox(width: 5),
+            IconButton(
+              icon: Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
+              onPressed: () => saveNote(context),
+            ),
+          ],
+        ),
+        body: ListView(
+          padding: EdgeInsets.all(10),
+          children: <Widget>[
+            ColoredBox(
+              color: whiteGreyColor,
+              child: TextField(
+                controller: titleController,
+                decoration: InputDecoration(labelText: 'Title'),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ColoredBox(
+              color: whiteGreyColor,
+              child: TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+              ),
+            ),
+            const SizedBox(height: 10),
+            DateAndTimePicker(
+              _note,
+              controller: reminderController,
+            ),
+            const SizedBox(height: 10),
+
+            //[_note] is passed to [CustomSlider] to provide the value of [_note.priority].
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Priority',
+                style: TextStyle(fontSize: 17),
+              ),
+            ),
+            MyToggleButtons(_note),
+          ],
+        ),
       ),
     );
   }
@@ -238,6 +272,7 @@ class _MyToggleButtonsState extends State<MyToggleButtons> {
     return Row(
       children: [
         Expanded(
+          flex: 2,
           child: SelectedButton(
             isEnabled: _values[0],
             iconData: Icons.spa,
@@ -251,6 +286,7 @@ class _MyToggleButtonsState extends State<MyToggleButtons> {
           width: 10,
         ),
         Expanded(
+          flex: 3,
           child: SelectedButton(
             isEnabled: _values[1],
             iconData: MdiIcons.alertOctagonOutline,
@@ -264,6 +300,7 @@ class _MyToggleButtonsState extends State<MyToggleButtons> {
           width: 10,
         ),
         Expanded(
+          flex: 2,
           child: SelectedButton(
             isEnabled: _values[2],
             iconData: Icons.whatshot,
@@ -347,10 +384,20 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
       child: TextField(
         readOnly: true,
         controller: widget.controller,
-        onTap: showDateThanTime,
+        onTap: widget.note.reminder == ''
+            ? showDateThanTime
+            : () {
+                setState(() {
+                  widget.note.reminder = '';
+                  widget.controller.text = '';
+                  final controlNotification = ControlNotification(context);
+                  controlNotification.cancelNotification(widget.note.id);
+                });
+              },
         decoration: InputDecoration(
           labelText: 'Remind me at',
-          suffixIcon: const Icon(Icons.date_range),
+          suffixIcon:
+              Icon(widget.note.reminder == '' ? Icons.date_range : Icons.close),
         ),
       ),
     );

@@ -37,7 +37,6 @@ class AppDatabase {
   ///Add one row to any table.
   static Future<int> insertRow(Map<String, dynamic> values) async {
     await open();
-
     return await _database.insert('notes', values);
   }
 

@@ -12,7 +12,13 @@ class Themes {
           backgroundColor: Colors.white,
           textTheme: TextTheme(
             bodyText2: const TextStyle(fontWeight: FontWeight.bold),
+            subtitle1: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.bold,
+            ),
           ),
+
           iconTheme: const IconThemeData(color: Colors.white, size: 25),
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: AppBarTheme(elevation: 0),
@@ -21,10 +27,11 @@ class Themes {
             labelColor: themeColor,
             unselectedLabelColor: Colors.white,
             indicator: const BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                    topLeft: const Radius.circular(10),
-                    topRight: const Radius.circular(10)),
-                color: Colors.white),
+              borderRadius: const BorderRadius.only(
+                  topLeft: const Radius.circular(10),
+                  topRight: const Radius.circular(10)),
+              color: Colors.white,
+            ),
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: themeColor,

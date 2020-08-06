@@ -1,5 +1,51 @@
 part of pages;
 
+///Get a path that is visbile to the user.
+Future<String> getVisiblePath(BuildContext context) async {
+  final platform = Theme.of(context).platform;
+
+  if (platform == TargetPlatform.android)
+    return (await getExternalStorageDirectory()).path;
+  else if (platform == TargetPlatform.iOS)
+    //TODO: when compiling the code to IOS , make sure to make the files visible.
+    return (await getApplicationDocumentsDirectory()).path;
+
+  throw UnsupportedError('Only Android and iOS are supported.');
+}
+
+///Show a dialog to check if the user want to
+///import a databese (return true)
+///or not(return false)
+Future<bool> showAlertDialog(BuildContext context) async {
+  bool import = false;
+
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        title: const Text(
+            'If you import a new notes , your old notes will be deleted'),
+        actions: [
+          FlatButton(
+            child: const Text('Continue'),
+            onPressed: () async {
+              import = true;
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: const Text("Cancel"),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ],
+      );
+    },
+  );
+
+  return import;
+}
+
 class SettingsPage extends StatelessWidget {
   final importController = TextEditingController();
 
@@ -17,9 +63,9 @@ class SettingsPage extends StatelessWidget {
               Icons.priority_high,
               color: Theme.of(context).primaryColor,
             ),
-            title: Text(
+            title: const Text(
               'Restart the app to apply all changes',
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
           ),
         ),
@@ -47,64 +93,105 @@ class SettingsPage extends StatelessWidget {
         ),
         Divider(height: 5),
 
-        //Export
+        //Export the database as txt file.
         Card(
           child: ListTile(
-            title: Text('Export the database as CSV'),
+            title: const Text('Export the notes'),
             trailing: Icon(
               MdiIcons.export,
               color: Theme.of(context).primaryColor,
             ),
+            onTap: () async {
+              final path = await getVisiblePath(context);
+              final file = File(path + '/NotesDataBase.txt');
+              await Permission.storage.request();
+
+              try {
+                await file.create();
+                await file.writeAsString(
+                  Provider.of<Notes>(context, listen: false).toCSV(),
+                );
+
+                Scaffold.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                    content: Text('Your notes are saved at\n$path'),
+                  ));
+              } catch (e) {
+                Scaffold.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                    content: Text('Access Denied'),
+                  ));
+              }
+            },
+          ),
+        ),
+
+        //Share
+        Card(
+          child: ListTile(
+            title: const Text('Share notes as CSV'),
+            trailing: Icon(
+              Icons.share,
+              color: Theme.of(context).primaryColor,
+            ),
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (_) {
-                  return AlertDialog(
-                    actions: [
-                      FlatButton(
-                        child: Text('Back'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      FlatButton(
-                        child: Text('Copy'),
-                        onPressed: () async {
-                          await FlutterClipboard.copy(
-                            Provider.of<Notes>(context, listen: false).toCSV() +
-                                ' ',
-                          );
-                          Scaffold.of(context).showSnackBar(
-                            const SnackBar(
-                              content: const Text('Copied to Clipboard'),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                    contentPadding: const EdgeInsets.only(left: 25, right: 25),
-                    title: const Text(
-                      "id,priority,title,description,reminder",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20.0),
-                      ),
-                    ),
-                    content: Container(
-                      height: 200,
-                      width: 300,
-                      padding: EdgeInsets.only(top: 10),
-                      child: SingleChildScrollView(
-                        child: SelectableText(
-                          Provider.of<Notes>(context, listen: false).toCSV(),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
+              Share.share(Provider.of<Notes>(context, listen: false).toCSV());
+            },
+          ),
+        ),
+
+        //Import The database from file
+        Card(
+          child: ListTile(
+            title: const Text('Import notes from file'),
+            trailing: Icon(
+              MdiIcons.fileImport,
+              color: Theme.of(context).primaryColor,
+            ),
+            onTap: () async {
+              bool import = await showAlertDialog(context);
+
+              if (import == false) return;
+
+              Permission.storage.request();
+
+              final file = await FilePicker.getFile();
+              String notesCSV;
+              try {
+                final fileExtension =
+                    file.path.substring(file.path.lastIndexOf('.') + 1);
+
+                if (fileExtension == 'txt' || fileExtension == 'csv') {
+                  notesCSV = await file.readAsString();
+
+                  final result =
+                      await Provider.of<Notes>(context, listen: false)
+                          .fromCSV(notesCSV);
+
+                  Scaffold.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: Text(result
+                          ? 'Notes have been imported successfully'
+                          : 'The file is not a valied file\nsee the help section for more info'),
+                    ));
+                } else {
+                  Scaffold.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: Text(
+                          'The extension of the file must be .txt or .csv'),
+                    ));
+                }
+              } catch (e) {
+                Scaffold.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                    content: Text('Access Denied'),
+                  ));
+              }
             },
           ),
         ),
@@ -122,53 +209,46 @@ class SettingsPage extends StatelessWidget {
                 suffixIcon: IconButton(
                   icon: Icon(MdiIcons.import),
                   onPressed: () async {
-                    showDialog(
-                        context: context,
-                        builder: (_context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            title: Text(
-                                'If you import a database , your old notes will be deleted'),
-                            actions: [
-                              FlatButton(
-                                child: Text('Import'),
-                                onPressed: () async {
-                                  Navigator.of(_context).pop();
+                    bool import = await showAlertDialog(context);
 
-                                  final result = await Provider.of<Notes>(
-                                          context,
-                                          listen: false)
-                                      .fromCSV(importController.text);
+                    if (import == false) return;
 
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        result
-                                            ? 'The database have been imported :)'
-                                            : 'Wrong CSV format :(',
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              FlatButton(
-                                child: Text("Cancel"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          );
-                        });
+                    final result =
+                        await Provider.of<Notes>(context, listen: false)
+                            .fromCSV(importController.text);
+
+                    Scaffold.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        content: Text(result
+                            ? 'Notes have been imported successfully'
+                            : 'The text is not a valied CSV text\nsee the help section for more info'),
+                      ));
+
+                    if (result) importController.text = '';
                   },
                 ),
-                labelText: 'Import the database as CSV',
+                labelText: 'Import the notes as CSV',
                 hintText: 'id,priority,title,description,reminder\\n',
               ),
             ),
           ),
         ),
+
+        //Manage permissions
+        Card(
+          child: ListTile(
+            title: Text('Manage permissions'),
+            trailing: Icon(
+              Icons.settings,
+              color: Theme.of(context).primaryColor,
+            ),
+            onTap: () {
+              openAppSettings();
+            },
+          ),
+        ),
+
         Divider(height: 15),
 
         //Help

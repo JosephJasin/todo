@@ -11,7 +11,7 @@ class NotePage extends StatelessWidget {
       builder: (context, Notes builder, child) {
         return ListView.builder(
           itemCount: builder.notesLength,
-          itemExtent: 150,
+          itemExtent: 110,
           itemBuilder: (context, index) {
             final row = builder.notes[index];
             return OpenContainer(
@@ -49,14 +49,12 @@ class NoteWidget extends StatelessWidget {
         vertical: 5,
       ),
       child: CustomPaint(
-        painter: NoteWidgetPainter(note),
+        painter: NoteWidgetPainter(note, titleFontSize: 15, dateFontSize: 10),
         size: Size(double.infinity, 100),
       ),
     );
   }
 }
-
-
 
 class NoteWidgetPainter extends CustomPainter {
   final Note note;
@@ -64,7 +62,12 @@ class NoteWidgetPainter extends CustomPainter {
 
   final _whitePaint = Paint()..color = Colors.white;
 
-  NoteWidgetPainter(this.note, {Listenable repaint}) : super(repaint: repaint) {
+  final double titleFontSize;
+  final double dateFontSize;
+
+  NoteWidgetPainter(this.note,
+      {Listenable repaint, this.titleFontSize = 25, this.dateFontSize = 20})
+      : super(repaint: repaint) {
     switch (note.priority) {
       case 0:
         _circlePaint.color = greenColor;
@@ -72,14 +75,14 @@ class NoteWidgetPainter extends CustomPainter {
       case 1:
         _circlePaint.color = yellowColor;
         break;
-      default :
+      default:
         _circlePaint.color = redColor;
     }
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    const diameter = 25.0;
+    final diameter = titleFontSize;
 
     final rrect = RRect.fromLTRBR(
       diameter,
@@ -89,7 +92,7 @@ class NoteWidgetPainter extends CustomPainter {
       const Radius.circular(20),
     );
 
-    canvas.drawShadow(Path()..addRRect(rrect), Colors.grey[100], 3, true);
+    canvas.drawShadow(Path()..addRRect(rrect), _circlePaint.color, 2.5, true);
 
     canvas.drawRRect(
       rrect,
@@ -119,8 +122,8 @@ class NoteWidgetPainter extends CustomPainter {
     //Draw "!"
     else if (note.priority == 1) {
       final tp = TextPainter(
-        text: const TextSpan(
-          style: const TextStyle(
+        text: TextSpan(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: diameter * 1.5,
@@ -161,9 +164,9 @@ class NoteWidgetPainter extends CustomPainter {
       final tp = TextPainter(
         maxLines: 1,
         text: TextSpan(
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.black,
-            fontSize: 25,
+            fontSize: titleFontSize,
           ),
           text: note.title,
         ),
@@ -185,9 +188,9 @@ class NoteWidgetPainter extends CustomPainter {
       final tp = TextPainter(
         maxLines: 1,
         text: TextSpan(
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.grey,
-            fontSize: 20,
+            fontSize: dateFontSize,
           ),
           text: note.getFormatedDate,
         ),

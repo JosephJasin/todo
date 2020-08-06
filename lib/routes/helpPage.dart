@@ -46,17 +46,34 @@ class HelpPage extends StatelessWidget {
           Card(
             child: ListTile(
               title: const Text('How to delete a note ?'),
-              subtitle: Row(
-                children: <Widget>[
-                  const Text(
-                    'click on the note that you want to delete, than click ',
-                  ),
-                  Icon(
-                    Icons.delete_forever,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ],
+              subtitle: RichText(
+                text: TextSpan(
+                  style: Theme.of(context).textTheme.subtitle1,
+                  children: [
+                    const TextSpan(
+                        text:
+                            'click on the note that you want to delete then click '),
+                    WidgetSpan(
+                      child: Icon(
+                        Icons.delete_forever,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    TextSpan(text: ''),
+                  ],
+                ),
               ),
+
+              // Row(
+              //   children: <Widget>[
+              //     // Icon(
+              //     //   Icons.delete_forever,
+              //     //   color: Theme.of(context).primaryColor,
+              //     // ),
+              //     // const Text('the note that you want to delete, than click'),
+
+              //   ],
+              // ),
             ),
           ),
           //What is CSV?
@@ -78,22 +95,51 @@ Note that hours are specified between 0 and 23.
             ),
           ),
 
+          //How to share my database(All my notes) ?
+          Card(
+            child: ListTile(
+              title: Text('How to share my notes ?'),
+              subtitle: Text(
+                  'Open the Setting page than click "share notes as CSV".'),
+            ),
+          ),
+
           //How to export my database(All my notes) ?
           Card(
             child: ListTile(
-              title: Text('How to export my database(All my notes) ?'),
+              title: Text('How to export my notes ?'),
+              subtitle: Text('''Open the Setting page than click "export notes".
+Warning ⚠️:the app need a permission to export your notes to an external file'''),
+            ),
+          ),
+
+          //How to give or prevent permission ?
+          Card(
+            child: ListTile(
+                title: Text('How to give or prevent permission ?'),
+                subtitle: Text(
+                    'Open the Setting page than click "Manage permissions".')),
+          ),
+
+          //How to import a database as file?
+          Card(
+            child: ListTile(
+              title: Text('How to import notes from a file ?'),
               subtitle: Text(
-                  '''Open the Setting page than clcik "Export the database as CSV" , click "Copy",
-and now you can send the information using any method you want  😄.
+                  '''Open the Setting page than click "Import notes\nthen choose a valid file".
+Warning ⚠️ : your old notes will be deleted.
+Warning ⚠️ : enter a valid CSV file (for more information , see "What is CSV ?").
+
 '''),
             ),
           ),
+
           //How to import a database ?
           Card(
             child: ListTile(
-              title: Text('How to import a database ?'),
+              title: Text('How to import notes from CSV text ?'),
               subtitle: Text(
-                  '''Open the Setting page than paste your CSV text in "Import the database as CSV".
+                  '''Open the Setting page than paste your CSV text in "Import notes as CSV".
 Warning ⚠️ : your old notes will be deleted.
 Warning ⚠️ : enter a valid CSV text (for more information , see "What is CSV ?").
 
