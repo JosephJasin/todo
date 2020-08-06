@@ -67,6 +67,8 @@ class EditNotePage extends StatelessWidget {
   }
 
   Future<void> onPop(BuildContext context) async {
+
+
     await showDialog(
       context: context,
       child: AlertDialog(

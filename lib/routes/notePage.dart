@@ -9,6 +9,28 @@ class NotePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Notes>(
       builder: (context, Notes builder, child) {
+        if (builder.notesLength == 0) {
+          return Center(
+            child: RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.subtitle1,
+                children: [
+                  TextSpan(text: 'Click on '),
+                  WidgetSpan(
+                      child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: Icon(Icons.add, size: 20),
+                  )),
+                  TextSpan(text: ' to add a new note'),
+                ],
+              ),
+            ),
+          );
+        }
+
         return ListView.builder(
           itemCount: builder.notesLength,
           itemExtent: 110,

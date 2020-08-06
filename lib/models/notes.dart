@@ -61,6 +61,21 @@ class Note {
     description = note.description;
     reminder = note.reminder;
   }
+
+  @override
+  bool operator ==(Object o2) {
+    if (o2 is! Note) return false;
+
+    Note n2 = o2;
+
+    if (id != n2.id ||
+        title != n2.title ||
+        description != n2.description ||
+        priority != n2.priority ||
+        reminder != n2.reminder) return false;
+
+    return true;
+  }
 }
 
 class Notes extends ChangeNotifier {
@@ -81,29 +96,55 @@ class Notes extends ChangeNotifier {
   }
 
   Future<int> add(Note note) async {
-    int id = await AppDatabase.insertRow(note.toRow());
-    await _load();
+    note.id = await AppDatabase.nextRowId();
+
+    await AppDatabase.insertRow(note.toRow());
+    _notes.add(note.toRow());
+
+    notesLength++;
     notifyListeners();
 
-    return id;
+    return note.id;
   }
 
   Future<int> update(Note note) async {
-    int id= await AppDatabase.updateRow(note.toRow(), where: 'id = ${note.id}');
-    await _load();
+    await AppDatabase.updateRow(note.toRow(), where: 'id = ${note.id}');
+
+    for (int i = 0; i < _notes.length; i++)
+      if (_notes[i]['id'] == note.id) {
+        _notes[i] = note.toRow();
+        break;
+      }
+
+    _notes.sort((Map<String, dynamic> r1, Map<String, dynamic> r2) {
+      if (r1['priority'] > r2['priority']) return -1;
+      if (r1['priority'] < r2['priority']) return 1;
+
+      return 0;
+    });
+
     notifyListeners();
-    return id;
+    return note.id;
   }
 
-  Future<void> remove(Note note) async {
+  Future<int> remove(Note note) async {
     await AppDatabase.deleteRow('id = ${note.id}');
-    await _load();
+
+    for (int i = 0; i < _notes.length; i++)
+      if (_notes[i]['id'] == note.id) {
+        _notes.removeAt(i);
+        break;
+      }
+    notesLength--;
+
     notifyListeners();
+    return note.id;
   }
 
   Future<void> removeAll() async {
     await AppDatabase.deleteAllRows();
-    await _load();
+    _notes.clear();
+    notesLength = 0;
     notifyListeners();
   }
 

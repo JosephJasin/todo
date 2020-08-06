@@ -35,24 +35,34 @@ class AppDatabase {
   }
 
   ///Add one row to any table.
-  static Future<int> insertRow(Map<String, dynamic> values) async {
+  static Future<void> insertRow(Map<String, dynamic> values) async {
     await open();
-    return await _database.insert('notes', values);
+    await _database.insert('notes', values);
+  }
+
+  static Future<int> nextRowId() async {
+    await open();
+
+    final list = await _database.rawQuery(
+      'SELECT id FROM notes WHERE id = (SELECT MAX(id) FROM notes)',
+    );
+
+    return list.length == 0 ? 0 : list[0]['id'] + 1;
   }
 
   ///Edit a row in any table.
   ///if [where] is null , all the rows in the values will be updated.
-  static Future<int> updateRow(Map<String, dynamic> values,
+  static Future<void> updateRow(Map<String, dynamic> values,
       {String where}) async {
     await open();
-    return await _database.update('notes', values, where: where);
+    await _database.update('notes', values, where: where);
   }
 
   ///Delete a row in a table.
   ///if [where] is null , all the rows will be deleted.
-  static Future<int> deleteRow(String where) async {
+  static Future<void> deleteRow(String where) async {
     await open();
-    return _database.delete('notes', where: where);
+    await _database.delete('notes', where: where);
   }
 
   static Future<void> deleteAllRows() async {
@@ -63,7 +73,7 @@ class AppDatabase {
       {String orderBy = 'priority DESC'}) async {
     await open();
 
-    return await _database.query('notes', orderBy: orderBy);
+    return (await _database.query('notes', orderBy: orderBy)).toList();
   }
 
   static Future<Map<String, dynamic>> getRow(int id) async {
