@@ -102,6 +102,14 @@ class Notes extends ChangeNotifier {
     _notes.add(note.toRow());
 
     notesLength++;
+
+    _notes.sort((Map<String, dynamic> r1, Map<String, dynamic> r2) {
+      if (r1['priority'] > r2['priority']) return -1;
+      if (r1['priority'] < r2['priority']) return 1;
+
+      return 0;
+    });
+
     notifyListeners();
 
     return note.id;
