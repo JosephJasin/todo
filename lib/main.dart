@@ -19,7 +19,7 @@ void main() async {
   try {
     color = Color(prefs.getInt('color'));
   } catch (e) {
-    color = Colors.red;
+    color = Colors.indigo;
   }
 
   SystemChrome.setEnabledSystemUIOverlays([

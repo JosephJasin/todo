@@ -296,13 +296,16 @@ class SettingsPage extends StatelessWidget {
 ///CHANGE ME IF(you want to add a new color).
 const List<Color> colors = [
   Colors.red,
+  Colors.pink,
+  Colors.amber,
   Colors.cyan,
   Colors.blue,
   Colors.green,
   Colors.teal,
-  Colors.amber,
-  Colors.pink,
+  Colors.indigo,
+  Colors.deepPurpleAccent,
   Colors.purple,
+  Colors.blueGrey,
   Color(0xff212121),
 ];
 
