@@ -1,5 +1,3 @@
-
-
 # todo
 
 **A cross-platform mobile app to store your notes for Android & Ios devices.**
@@ -7,6 +5,8 @@
 ## App features
 **1- Store your notes locally (the notes are sorted from the height priority to the lowest priority )**
 ![enter image description here](https://github.com/JosephJasin/todo/blob/master/pic/add%20note.jpeg?raw=true)
+<hr>
+
 **2- Add a remainder to your note**
 ![enter image description here](https://github.com/JosephJasin/todo/blob/master/pic/Date/indigo.jpeg?raw=true)
 ![enter image description here](https://github.com/JosephJasin/todo/blob/master/pic/Date/pink.jpeg?raw=true)
@@ -15,14 +15,19 @@
 ![enter image description here](https://github.com/JosephJasin/todo/blob/master/pic/Time/cyan.jpeg?raw=true)
 ![enter image description here](https://github.com/JosephJasin/todo/blob/master/pic/Time/pink.jpeg?raw=true)
 **and there is more colors.**<br>
+<hr>
 
 **3- Export your notes as file.**<br>
 **4- Share your notes.**<br>
 **5- Import notes from a file.**<br>
 **6- Import notes from a CSV text.**<br>
 **7- basic animations.**<br>
+<hr>
+
 **8- Helping page.**
 ![enter image description here](https://github.com/JosephJasin/todo/blob/master/pic/Help/indigo.jpeg?raw=true)
+<hr>
+
 **9- Customize your app theme**
 ![enter image description here](https://github.com/JosephJasin/todo/blob/master/pic/color.jpeg?raw=true)
 
